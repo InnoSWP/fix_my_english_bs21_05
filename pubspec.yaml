@@ -30,16 +30,18 @@ flutter:
   assets:
     - assets/
 
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: Eczar
+      fonts:
+        - asset: fonts/Eczar/Eczar-Bold.ttf
+        - asset: fonts/Eczar/Eczar-ExtraBold.ttf
+        - asset: fonts/Eczar/Eczar-Medium.ttf
+        - asset: fonts/Eczar/Eczar-Regular.ttf
+        - asset: fonts/Eczar/Eczar-SemiBold.ttf
+    - family: Merriweather
+      fonts:
+        - asset: fonts/Merriweather/Merriweather-Black.ttf
+        - asset: fonts/Merriweather/Merriweather-Bold.ttf
+        - asset: fonts/Merriweather/Merriweather-Light.ttf
+        - asset: fonts/Merriweather/Merriweather-Regular.ttf
+          weight: 700
