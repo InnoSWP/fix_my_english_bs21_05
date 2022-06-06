@@ -18,9 +18,10 @@ class AnalysisPage extends StatelessWidget {
 }
 
 class MyAnalysisPage extends StatefulWidget {
-  const MyAnalysisPage({Key? key, required this.title}) : super(key: key);
+  const MyAnalysisPage({Key? key, required this.title, required}) : super(key: key);
 
   final String title;
+  late String text;
 
   @override
   State<MyAnalysisPage> createState() => _MyAnalysisPageState();
