@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'analysis_page.dart';
 import 'package:flutter/material.dart';
+import 'pdf_reader.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-late StreamController<String> data1;
-late StreamController<List<String>> data2;
+late StreamController<String> dataFromField = StreamController();
+late StreamController<List<String>> dataFromPDF = StreamController();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -68,25 +70,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: TextField(
                       maxLines: 10,
                       selectionHeightStyle:
-                          BoxHeightStyle.includeLineSpacingBottom,
+                      BoxHeightStyle.includeLineSpacingBottom,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Text",
                         labelStyle: TextStyle(),
                       ),
                       onSubmitted: (String value) async {
-                        data1.add(value);
-                        goToSecond();
+                        goToAnalysisPage();
+                        dataFromField.add(value);
                       },
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 50, bottom: 50),
                     child: TextButton(
-                      onPressed: goToSecond,
+                      onPressed: goToAnalysisPage,
                       child: const Text("Submit for analysis"),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(50),
+                    child: TextButton(
+                      onPressed: uploadPDF,
+                      child: Text("Submit the PDF files"),),
+                  )
                   //Text(data)
                 ],
               ),
@@ -97,52 +105,27 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void goToSecond() {
+  void goToAnalysisPage() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const MyAnalysisPage(
-                  title: 'Fix My English',
-                )));
-  }
-}
-
-class AnalysisPage extends StatelessWidget {
-  const AnalysisPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fix My English',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Analysis'),
-    );
-  }
-}
-
-class MyAnalysisPage extends StatefulWidget {
-  const MyAnalysisPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyAnalysisPage> createState() => _MyAnalysisPageState();
-}
-
-class _MyAnalysisPageState extends State<MyAnalysisPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          'assets/logo.png',
-          height: 70,
-          alignment: Alignment.centerLeft,
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+        const MyAnalysisPage(
+          title: 'Fix My English',
         ),
       ),
-      body: Text("asdaslkfjasdkfjas"),
     );
+  }
+
+  void uploadPDF() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true, type: FileType.custom, allowedExtensions: ["pdf"]);
+    if(result != null) {
+      List<String> pdfTexts = [];
+      for(PlatformFile file in result.files) {
+        pdfTexts.add(PDFToRawTextConverter(file.bytes!).result);
+      }
+      dataFromPDF.add(pdfTexts);
+    }
   }
 }
