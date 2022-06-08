@@ -31,40 +31,99 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<AnalyzedText>(
-        future: analysis,
-        builder: (BuildContext context, AsyncSnapshot<AnalyzedText> snapshot) {
-          if (snapshot.hasData) {
-            //If future recieve text, show it
-            return ListView.builder(
-                itemCount: snapshot.data!.analyzedSentences.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return RichText(
-                      text: TextSpan(children: [
-                    TextSpan(
-                        text: snapshot.data!.analyzedSentences[index]
-                            .splitOnThree()[0],
-                        style: TextStyle(color: Colors.black87)),
-                    TextSpan(
-                        text: snapshot.data!.analyzedSentences[index]
-                            .splitOnThree()[1],
+      future: analysis,
+      builder: (BuildContext context, AsyncSnapshot<AnalyzedText> snapshot) {
+        if (snapshot.hasData) {
+          //If future recieve text, show it
+          return ListView.builder(
+            itemCount: snapshot.data!.analyzedSentences.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (snapshot.data!.analyzedSentences[index].label == 'WORDNES3') {
+                return RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            '${snapshot.data!.analyzedSentences[index].sentence}\n',
                         style: const TextStyle(
-                            backgroundColor: Colors.red,
-                            color: Colors.black54)),
+                          backgroundColor: Color(0xFFDC7024),
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Merriweather',
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            '${snapshot.data!.analyzedSentences[index].description}\n',
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                          fontFamily: 'Merriweather',
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return RichText(
+                text: TextSpan(
+                  children: [
                     TextSpan(
-                        text: snapshot.data!.analyzedSentences[index]
-                            .splitOnThree()[2],
-                        style: TextStyle(color: Colors.black87)),
-                  ]));
-                });
-          } else {
-            //If text is not recieved yet, show progress indicator
-            return Container(
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(
-                color: Color(0xFF864921),
-              ),
-            );
-          }
-        });
+                      text: snapshot.data!.analyzedSentences[index]
+                          .splitOnThree()[0],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Merriweather',
+                      ),
+                    ),
+                    TextSpan(
+                      text: snapshot.data!.analyzedSentences[index]
+                          .splitOnThree()[1],
+                      style: const TextStyle(
+                        backgroundColor: Color(0xFFF38A40),
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Merriweather',
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                          '${snapshot.data!.analyzedSentences[index].splitOnThree()[2]}\n',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Merriweather',
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                          '${snapshot.data!.analyzedSentences[index].description}\n',
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontFamily: 'Merriweather',
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        } else {
+          //If text is not recieved yet, show progress indicator
+          return Container(
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator(
+              color: Color(0xFF864921),
+            ),
+          );
+        }
+      },
+    );
   }
 }
