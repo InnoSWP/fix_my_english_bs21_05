@@ -205,7 +205,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                                       style: BorderStyle.solid),
                                 ),
                                 border: const OutlineInputBorder(),
-                                //  label: const Center(child: Text('Enter text to analyze')),
+                                label: const Center(child: Text('Your text for analyzing')),
                               ),
                               cursorColor: Theme.of(context).primaryColorDark,
                             );
@@ -237,7 +237,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(top: 80, left: 20, right: 20),
+                    margin: const EdgeInsets.only(top: 80, left: 20, right: 20),
                     child: ElevatedButton.icon(
                       onPressed: () {
                         //TODO: Extract function
@@ -250,8 +250,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                     ),
                   ),
                 ],
-              )
-              //SafeArea(child: )
+              ),
             ],
           ),
         ),
@@ -259,6 +258,3 @@ class _MainPageWidget extends State<MainPageWidget> {
     );
   }
 }
-/*
-
- */
