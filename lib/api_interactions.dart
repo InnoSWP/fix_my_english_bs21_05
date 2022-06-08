@@ -1,7 +1,19 @@
+import 'dart:convert';
 import 'analysis_data.dart';
+import 'package:http/http.dart' as http;
 
-//Will be API call function. Now it is just fake :)
-Future<AnalysisData> sendToIExtract(String text) async {
-  await Future.delayed(const Duration(seconds: 3));
-  return AnalysisData(rawText: text);
+//Api call function
+Future<List<AnalysisData>? > sendToIExtract(String text) async {
+  final uri =
+      Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/FixMyEnglish');
+  final headers = {
+    "accept": "application/json",
+    "Content-Type": "application/json"
+  };
+  final body = jsonEncode({"text": text});
+  final response = await http.post(uri, headers: headers, body: body);
+  if(response.statusCode != 200){
+    // do something
+  }
+  return analysisDataFromJson(response.body);
 }
