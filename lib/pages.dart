@@ -20,86 +20,91 @@ class StartPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('iExtract'),
+        title: const Text('iExtract', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextField(
-                  minLines: 20,
-                  maxLines: 40,
-                  keyboardType: TextInputType.multiline,
-                  controller: textEditingController,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Merriweather',
-                  ),
-                  decoration: InputDecoration(
-                    labelStyle: const TextStyle(
-                      fontSize: 50,
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(2.0)),
-                      borderSide: BorderSide(
-                          color: Theme.of(context).primaryColorDark,
-                          style: BorderStyle.solid),
-                    ),
-                    border: InputBorder.none,
-                    label: const Center(child: Text('Enter text to analyze')),
-                  ),
-                  cursorColor: Theme.of(context).primaryColorDark,
+        padding: const EdgeInsets.all(50),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextField(
+              minLines: 20,
+              maxLines: 40,
+              keyboardType: TextInputType.multiline,
+              controller: textEditingController,
+              style: const TextStyle(
+                fontSize: 15,
+                fontFamily: 'Merriweather',
+              ),
+              decoration: InputDecoration(
+                labelStyle: const TextStyle(
+                  fontSize: 20,
                 ),
-                Column(
+                focusedBorder: UnderlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).primaryColorDark,
+                      style: BorderStyle.solid),
+                ),
+                border: const OutlineInputBorder(),
+                label: const Center(child: Text('Enter text to analyze')),
+              ),
+              cursorColor: Theme.of(context).primaryColorDark,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Center(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      alignment: const AlignmentDirectional(1.0, 0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 50),
                       child: ElevatedButton.icon(
-                        onPressed: () async {
-                          //Pick pdf files from device
-                          FilePickerResult? result = await FilePicker.platform
-                              .pickFiles(
-                              allowMultiple: true,
-                              type: FileType.custom,
-                              allowedExtensions: ['pdf']);
-
-                          if (result != null) {
-                            //If user picked something, then extract text and send to IExtract API, then call callback
-                            onFileUploaded([
-                              sendToIExtract(
-                                  PDFToRawTextConverter(result.files[0].bytes!)
-                                      .result)
-                            ]);
-                          }
+                        onPressed: () {
+                          //If user typed something into text field send it to IExtract API, then call callback
+                          onFileUploaded(
+                              [sendToIExtract(textEditingController.text)]);
                         },
                         label: const Text(
-                          'Upload Files',
+                          "Upload as text",
                           style: TextStyle(fontSize: 20),
                         ),
-                        icon: const Icon(Icons.upload_file, size: 60),
+                        icon: const Icon(Icons.short_text, size: 60),
                       ),
                     ),
                     ElevatedButton.icon(
-                      onPressed: () {
-                        //If user typed something into text field send it to IExtract API, then call callback
-                        onFileUploaded(
-                            [sendToIExtract(textEditingController.text)]);
+                      onPressed: () async {
+                        //Pick pdf files from device
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(
+                                allowMultiple: true,
+                                type: FileType.custom,
+                                allowedExtensions: ['pdf']);
+
+                        if (result != null) {
+                          //If user picked something, then extract text and send to IExtract API, then call callback
+                          onFileUploaded([
+                            sendToIExtract(
+                                PDFToRawTextConverter(result.files[0].bytes!)
+                                    .result)
+                          ]);
+                        }
                       },
                       label: const Text(
-                        "Upload as text",
+                        'Upload Files',
                         style: TextStyle(fontSize: 20),
                       ),
-                      icon: const Icon(Icons.short_text, size: 60),
-                    )
+                      icon: const Icon(Icons.upload_file, size: 60),
+                    ),
                   ],
-                )
-              ],
+                ),
+              ),
             ),
-          )),
+          ],
+        ),
+      )),
     );
   }
 }
