@@ -8,7 +8,7 @@ import 'pdf_reader.dart';
 ///Starting page widget with upload button, text field, and logo
 class StartPageWidget extends StatelessWidget {
   //Callback that called after user upload files
-  final Function(List<Future<AnalysisData>>) onFileUploaded;
+  final Function(List<Future<AnalyzedText>>) onFileUploaded;
 
   //Controller to get text from text field
   final TextEditingController textEditingController = TextEditingController();
@@ -33,8 +33,8 @@ class StartPageWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextField(
-                minLines: 20,
-                maxLines: 20,
+                minLines: 15,
+                maxLines: 15,
                 keyboardType: TextInputType.multiline,
                 controller: textEditingController,
                 style: const TextStyle(
@@ -116,18 +116,18 @@ class StartPageWidget extends StatelessWidget {
 ///Main page widget. Works with futures to show text analyses
 class MainPageWidget extends StatefulWidget {
   //List with all analyses that user has
-  final List<Future<AnalysisData>> analysisRequests = [];
+  final List<Future<AnalyzedText>> analysisRequests = [];
 
   MainPageWidget({Key? key}) : super(key: key);
 
   ///Adds new analysis to list. Needs future of AnalysisData [request]
-  void addNewAnalysis(Future<AnalysisData> request) {
+  void addNewAnalysis(Future<AnalyzedText> request) {
     analysisRequests.add(request);
   }
 
   ///Adds multiple analysis to list. Needs list of futures of AnalysisData [request]
-  void addManyAnalyses(List<Future<AnalysisData>> requests) {
-    for (Future<AnalysisData> request in requests) {
+  void addManyAnalyses(List<Future<AnalyzedText>> requests) {
+    for (Future<AnalyzedText> request in requests) {
       analysisRequests.add(request);
     }
   }
@@ -155,14 +155,18 @@ class _MainPageWidget extends State<MainPageWidget> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    height: MediaQuery.of(context).size.height * 0.9,
+                    //width: MediaQuery.of(context).size.width * 0.65,
+                    //height: MediaQuery.of(context).size.height * 0.9,
                     alignment: Alignment.centerLeft,
                     child: Column(
                       children: [
-                        AnalyzedTextWidget(
-                          analysis: widget.analysisRequests.first,
-                        ),
+                        SizedBox(
+                          width: 400,
+                          height: 400,
+                          child: AnalyzedTextWidget(
+                            analysis: widget.analysisRequests.first,
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -174,14 +178,14 @@ class _MainPageWidget extends State<MainPageWidget> {
                     minimum:
                         const EdgeInsets.only(top: 20, left: 20, right: 20),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.3,
                       alignment: Alignment.topRight,
                       //widget.analysisRequests.first
                       child: FutureBuilder(
                         future: widget.analysisRequests.first,
                         builder: (BuildContext context,
-                            AsyncSnapshot<AnalysisData> snapshot) {
+                            AsyncSnapshot<AnalyzedText> snapshot) {
                           if (snapshot.hasData) {
                             return TextFormField(
                               initialValue: snapshot.data!.rawText,

@@ -4,7 +4,7 @@ import 'analysis_data.dart';
 ///Widget to show text analyzed by IExtract with all highlighting and other stuff (will be implemented soon)
 ///This widget uses futures to load text!
 class AnalyzedTextWidget extends StatefulWidget {
-  final Future<AnalysisData> analysis;
+  final Future<AnalyzedText> analysis;
 
   ///Constructs AnalyzedTextWidget
   ///
@@ -19,7 +19,7 @@ class AnalyzedTextWidget extends StatefulWidget {
 ///Class that represent state controll of AnalyzedTextWidget
 class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
   //Future of AnalysisData
-  late Future<AnalysisData> analysis;
+  late Future<AnalyzedText> analysis;
 
   @override
   void initState() {
@@ -30,15 +30,32 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AnalysisData>(
+    return FutureBuilder<AnalyzedText>(
         future: analysis,
-        builder: (BuildContext context, AsyncSnapshot<AnalysisData> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<AnalyzedText> snapshot) {
           if (snapshot.hasData) {
             //If future recieve text, show it
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Text(snapshot.data!.rawText),
-            );
+            return ListView.builder(
+                itemCount: snapshot.data!.analyzedSentences.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                        text: snapshot.data!.analyzedSentences[index]
+                            .splitOnThree()[0],
+                        style: TextStyle(color: Colors.black87)),
+                    TextSpan(
+                        text: snapshot.data!.analyzedSentences[index]
+                            .splitOnThree()[1],
+                        style: const TextStyle(
+                            backgroundColor: Colors.red,
+                            color: Colors.black54)),
+                    TextSpan(
+                        text: snapshot.data!.analyzedSentences[index]
+                            .splitOnThree()[2],
+                        style: TextStyle(color: Colors.black87)),
+                  ]));
+                });
           } else {
             //If text is not recieved yet, show progress indicator
             return Container(
