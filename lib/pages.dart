@@ -153,21 +153,16 @@ class _MainPageWidget extends State<MainPageWidget> {
               SafeArea(
                 minimum: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(45),
                   child: Container(
-                    //width: MediaQuery.of(context).size.width * 0.65,
-                    //height: MediaQuery.of(context).size.height * 0.9,
+                    color: const Color(0xFFFBFDF7),
+                    padding: const EdgeInsets.only(right: 10, left: 10, top: 25, bottom: 25),
+                    //margin: const EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    height: MediaQuery.of(context).size.height * 0.9,
                     alignment: Alignment.centerLeft,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: 400,
-                          height: 400,
-                          child: AnalyzedTextWidget(
-                            analysis: widget.analysisRequests.first,
-                          ),
-                        )
-                      ],
+                    child: AnalyzedTextWidget(
+                      analysis: widget.analysisRequests.first,
                     ),
                   ),
                 ),
@@ -176,10 +171,10 @@ class _MainPageWidget extends State<MainPageWidget> {
                 children: [
                   SafeArea(
                     minimum:
-                        const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        const EdgeInsets.only(top: 25, left: 20),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       alignment: Alignment.topRight,
                       //widget.analysisRequests.first
                       child: FutureBuilder(
@@ -187,6 +182,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                         builder: (BuildContext context,
                             AsyncSnapshot<AnalyzedText> snapshot) {
                           if (snapshot.hasData) {
+                            debugPrint(snapshot.data!.rawText);
                             return TextFormField(
                               initialValue: snapshot.data!.rawText,
                               minLines: 25,
@@ -209,7 +205,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                                       style: BorderStyle.solid),
                                 ),
                                 border: const OutlineInputBorder(),
-                                label: const Center(child: Text('Your text for analyzing')),
+                                label: const Text('Your text for analyzing'),
                               ),
                               cursorColor: Theme.of(context).primaryColorDark,
                             );
@@ -241,13 +237,13 @@ class _MainPageWidget extends State<MainPageWidget> {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(top: 80, left: 20, right: 20),
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 8, left: 20, right: 20),
                     child: ElevatedButton.icon(
                       onPressed: () {
                         //TODO: Extract function
                       },
                       label: const Text(
-                        "Extract the report",
+                        "Export the report",
                         style: TextStyle(fontSize: 20),
                       ),
                       icon: const Icon(Icons.arrow_downward, size: 60),
