@@ -20,91 +20,95 @@ class StartPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('iExtract', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          'iExtract',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextField(
-              minLines: 20,
-              maxLines: 40,
-              keyboardType: TextInputType.multiline,
-              controller: textEditingController,
-              style: const TextStyle(
-                fontSize: 15,
-                fontFamily: 'Merriweather',
-              ),
-              decoration: InputDecoration(
-                labelStyle: const TextStyle(
-                  fontSize: 20,
+        child: Padding(
+          padding: const EdgeInsets.all(50),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextField(
+                minLines: 20,
+                maxLines: 20,
+                keyboardType: TextInputType.multiline,
+                controller: textEditingController,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'Merriweather',
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(2.0)),
-                  borderSide: BorderSide(
-                      color: Theme.of(context).primaryColorDark,
-                      style: BorderStyle.solid),
+                decoration: InputDecoration(
+                  labelStyle: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).primaryColorDark,
+                        style: BorderStyle.solid),
+                  ),
+                  border: const OutlineInputBorder(),
+                  label: const Center(child: Text('Enter text to analyze')),
                 ),
-                border: const OutlineInputBorder(),
-                label: const Center(child: Text('Enter text to analyze')),
+                cursorColor: Theme.of(context).primaryColorDark,
               ),
-              cursorColor: Theme.of(context).primaryColorDark,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(30),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 50),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          //If user typed something into text field send it to IExtract API, then call callback
-                          onFileUploaded(
-                              [sendToIExtract(textEditingController.text)]);
+              Padding(
+                padding: const EdgeInsets.all(30),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 50),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            //If user typed something into text field send it to IExtract API, then call callback
+                            onFileUploaded(
+                                [sendToIExtract(textEditingController.text)]);
+                          },
+                          label: const Text(
+                            "Upload as text",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          icon: const Icon(Icons.short_text, size: 60),
+                        ),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          //Pick pdf files from device
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  allowMultiple: true,
+                                  type: FileType.custom,
+                                  allowedExtensions: ['pdf']);
+
+                          if (result != null) {
+                            //If user picked something, then extract text and send to IExtract API, then call callback
+                            onFileUploaded([
+                              sendToIExtract(
+                                  PDFToRawTextConverter(result.files[0].bytes!)
+                                      .result)
+                            ]);
+                          }
                         },
                         label: const Text(
-                          "Upload as text",
+                          'Upload Files',
                           style: TextStyle(fontSize: 20),
                         ),
-                        icon: const Icon(Icons.short_text, size: 60),
+                        icon: const Icon(Icons.upload_file, size: 60),
                       ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        //Pick pdf files from device
-                        FilePickerResult? result = await FilePicker.platform
-                            .pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: ['pdf']);
-
-                        if (result != null) {
-                          //If user picked something, then extract text and send to IExtract API, then call callback
-                          onFileUploaded([
-                            sendToIExtract(
-                                PDFToRawTextConverter(result.files[0].bytes!)
-                                    .result)
-                          ]);
-                        }
-                      },
-                      label: const Text(
-                        'Upload Files',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      icon: const Icon(Icons.upload_file, size: 60),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -137,12 +141,124 @@ class _MainPageWidget extends State<MainPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('iExtract')),
-      body: Center(
-        child: AnalyzedTextWidget(
-          analysis: widget.analysisRequests.first,
+      appBar: AppBar(
+          title: const Text(
+        'iExtract',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      )),
+      body: SafeArea(
+        child: Center(
+          child: Row(
+            children: [
+              SafeArea(
+                minimum: const EdgeInsets.all(20),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      children: [
+                        AnalyzedTextWidget(
+                          analysis: widget.analysisRequests.first,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  SafeArea(
+                    minimum:
+                        const EdgeInsets.only(top: 20, left: 20, right: 20),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      alignment: Alignment.topRight,
+                      //widget.analysisRequests.first
+                      child: FutureBuilder(
+                        future: widget.analysisRequests.first,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AnalysisData> snapshot) {
+                          if (snapshot.hasData) {
+                            return TextFormField(
+                              initialValue: snapshot.data!.rawText,
+                              minLines: 25,
+                              maxLines: 25,
+                              keyboardType: TextInputType.multiline,
+                              //controller: textEditingController,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Merriweather',
+                              ),
+                              decoration: InputDecoration(
+                                labelStyle: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(2.0)),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColorDark,
+                                      style: BorderStyle.solid),
+                                ),
+                                border: const OutlineInputBorder(),
+                                //  label: const Center(child: Text('Enter text to analyze')),
+                              ),
+                              cursorColor: Theme.of(context).primaryColorDark,
+                            );
+                          } else {
+                            return Container(
+                              alignment: Alignment.center,
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10, left: 20, right: 20),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        //TODO: Function for updating the text for analysis
+                      },
+                      label: const Text(
+                        "Update the text",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      icon: const Icon(Icons.short_text, size: 60),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    margin: EdgeInsets.only(top: 80, left: 20, right: 20),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        //TODO: Extract function
+                      },
+                      label: const Text(
+                        "Extract the report",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      icon: const Icon(Icons.arrow_downward, size: 60),
+                    ),
+                  ),
+                ],
+              )
+              //SafeArea(child: )
+            ],
+          ),
         ),
       ),
     );
   }
 }
+/*
+
+ */

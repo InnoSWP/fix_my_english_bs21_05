@@ -41,10 +41,11 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
             );
           } else {
             //If text is not recieved yet, show progress indicator
-            return const SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
+            return Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                color: Color(0xFF864921),
+              ),
             );
           }
         });
