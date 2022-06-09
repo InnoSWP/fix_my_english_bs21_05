@@ -140,6 +140,9 @@ class MainPageWidget extends StatefulWidget {
 class _MainPageWidget extends State<MainPageWidget> {
   @override
   Widget build(BuildContext context) {
+    AnalyzedTextController analyzedTextController = AnalyzedTextController();
+    TextEditingController textEditingController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -156,13 +159,15 @@ class _MainPageWidget extends State<MainPageWidget> {
                   borderRadius: BorderRadius.circular(45),
                   child: Container(
                     color: const Color(0xFFFBFDF7),
-                    padding: const EdgeInsets.only(right: 10, left: 10, top: 25, bottom: 25),
+                    padding: const EdgeInsets.only(
+                        right: 10, left: 10, top: 25, bottom: 25),
                     //margin: const EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.width * 0.65,
                     height: MediaQuery.of(context).size.height * 0.9,
                     alignment: Alignment.centerLeft,
                     child: AnalyzedTextWidget(
                       analysis: widget.analysisRequests.first,
+                      controller: analyzedTextController,
                     ),
                   ),
                 ),
@@ -170,8 +175,7 @@ class _MainPageWidget extends State<MainPageWidget> {
               Column(
                 children: [
                   SafeArea(
-                    minimum:
-                        const EdgeInsets.only(top: 25, left: 20),
+                    minimum: const EdgeInsets.only(top: 25, left: 20),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.3,
                       height: MediaQuery.of(context).size.height * 0.5,
@@ -183,12 +187,13 @@ class _MainPageWidget extends State<MainPageWidget> {
                             AsyncSnapshot<AnalyzedText> snapshot) {
                           if (snapshot.hasData) {
                             debugPrint(snapshot.data!.rawText);
+                            textEditingController.text = snapshot.data!.rawText;
                             return TextFormField(
-                              initialValue: snapshot.data!.rawText,
+                              //initialValue: snapshot.data!.rawText,
+                              controller: textEditingController,
                               minLines: 25,
                               maxLines: 25,
                               keyboardType: TextInputType.multiline,
-                              //controller: textEditingController,
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontFamily: 'Merriweather',
@@ -226,7 +231,8 @@ class _MainPageWidget extends State<MainPageWidget> {
                         const EdgeInsets.only(top: 10, left: 20, right: 20),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        //TODO: Function for updating the text for analysis
+                        analyzedTextController.changeAnalysis(
+                            sendToIExtract(textEditingController.text));
                       },
                       label: const Text(
                         "Update the text",
@@ -237,7 +243,10 @@ class _MainPageWidget extends State<MainPageWidget> {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 8, left: 20, right: 20),
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 8,
+                        left: 20,
+                        right: 20),
                     child: ElevatedButton.icon(
                       onPressed: () {
                         //TODO: Extract function
