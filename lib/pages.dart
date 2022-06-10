@@ -63,7 +63,7 @@ class StartPageWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 50),
+                        padding: const EdgeInsets.only(bottom: 25),
                         child: ElevatedButton.icon(
                           onPressed: () {
                             //If user typed something into text field send it to IExtract API, then call callback
