@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'analysis_data.dart';
 
+class AnalyzedTextController {
+  late Function updateCallback;
+
+  void changeAnalysis(Future<AnalyzedText> analysis) {
+    updateCallback(analysis);
+  }
+}
+
 ///Widget to show text analyzed by IExtract with all highlighting and other stuff (will be implemented soon)
 ///This widget uses futures to load text!
 class AnalyzedTextWidget extends StatefulWidget {
   final Future<AnalyzedText> analysis;
+  final AnalyzedTextController controller;
 
   ///Constructs AnalyzedTextWidget
   ///
   ///Requires future of AnalysisData class instance [analysis]
-  const AnalyzedTextWidget({Key? key, required this.analysis})
+  const AnalyzedTextWidget(
+      {Key? key, required this.analysis, required this.controller})
       : super(key: key);
 
   @override
@@ -20,12 +30,22 @@ class AnalyzedTextWidget extends StatefulWidget {
 class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
   //Future of AnalysisData
   late Future<AnalyzedText> analysis;
+  late AnalyzedTextController controller;
+
+  void updateText(Future<AnalyzedText> newAnalysis) {
+    setState(() {
+      analysis = newAnalysis;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     //Get AnalysisData future from parent
     analysis = super.widget.analysis;
+    //Get controller from parent
+    controller = super.widget.controller;
+    controller.updateCallback = updateText;
   }
 
   @override
