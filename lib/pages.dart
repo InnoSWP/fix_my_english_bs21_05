@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'analyzed_text_widget.dart';
 import 'api_interactions.dart';
-import 'pdf_reader.dart';
 
 ///Starting page widget with upload button, text field, and logo
 class StartPageWidget extends StatelessWidget {
@@ -88,11 +87,11 @@ class StartPageWidget extends StatelessWidget {
 
                           if (result != null) {
                             //If user picked something, then extract text and send to IExtract API, then call callback
-                            onFileUploaded([
-                              sendToIExtract(
-                                  PDFToRawTextConverter(result.files[0].bytes!)
-                                      .result)
-                            ]);
+                            sendForPDFExtract(result.files[0].bytes!,
+                                    result.files[0].name)
+                                .then((value) {
+                              onFileUploaded([sendToIExtract(value)]);
+                            });
                           }
                         },
                         label: const Text(
