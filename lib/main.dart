@@ -52,7 +52,7 @@ class RootWidget extends StatefulWidget {
 }
 
 //Application pages
-enum AppPages { startPage, mainPage }
+enum AppPages { startPage, textPage, filePage }
 
 ///Class that represents state controll of root widget
 class _RootWidget extends State<RootWidget> {
@@ -63,8 +63,9 @@ class _RootWidget extends State<RootWidget> {
   late StartPageWidget startPage;
 
   //Main page widget
-  late MainPageWidget mainPage;
+  late TextPageWidget textPage;
 
+  late FilePageWidget filePage;
   @override
   void initState() {
     super.initState();
@@ -73,17 +74,27 @@ class _RootWidget extends State<RootWidget> {
     appState = AppPages.startPage;
 
     //Create start page widget, and listen for uploading event
-    startPage = StartPageWidget(onFileUploaded: (requests) {
+    startPage = StartPageWidget(UploadedTextCallBack: (requests) {
       setState(() {
-        //When user uploads files switch to main page
-        appState = AppPages.mainPage;
-        //Provide all requests made in start page to main page
-        mainPage.addManyAnalyses(requests);
+        //When user uploads text switch to text page
+          appState = AppPages.textPage;
+          //Provide all requests made in start page to main page
+          textPage.addManyAnalyses(requests);
       });
-    });
+    },
+        UploadedFileCallBack: (files){
+            setState((){
+              appState = AppPages.filePage;
+              filePage.addManyFiles(files);
+            });
+        }
+    );
 
-    //Create main page widget
-    mainPage = MainPageWidget();
+    //Create text page widget
+    textPage = TextPageWidget();
+
+    //Create file page widget
+    filePage = FilePageWidget();
   }
 
   @override
@@ -92,8 +103,10 @@ class _RootWidget extends State<RootWidget> {
     switch (appState) {
       case AppPages.startPage:
         return startPage;
-      case AppPages.mainPage:
-        return mainPage;
+      case AppPages.textPage:
+        return textPage;
+      case AppPages.filePage:
+        return filePage;
     }
   }
 }
