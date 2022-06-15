@@ -1,19 +1,24 @@
+import 'dart:io';
+
 import 'analysis_data.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'analyzed_text_widget.dart';
 import 'api_interactions.dart';
 
+
 ///Starting page widget with upload button, text field, and logo
 class StartPageWidget extends StatelessWidget {
-  //Callback that called after user upload files
-  final Function(List<Future<AnalyzedText>>) onFileUploaded;
+  //Callback that called after user type text
+  final Function(List<Future<AnalyzedText>>) UploadedTextCallBack;
 
+  //Callback that called after user upload files
+  final Function(List<File>) UploadedFileCallBack;
   //Controller to get text from text field
   final TextEditingController textEditingController = TextEditingController();
 
-  ///Constructs start page widget. Requires callback [onFileUploaded].
-  StartPageWidget({Key? key, required this.onFileUploaded}) : super(key: key);
+  ///Constructs start page widget. Requires callback
+  StartPageWidget({Key? key, required this.UploadedTextCallBack, required this.UploadedFileCallBack}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +71,7 @@ class StartPageWidget extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             //If user typed something into text field send it to IExtract API, then call callback
-                            onFileUploaded(
+                            UploadedTextCallBack(
                                 [sendToIExtract(textEditingController.text)]);
                           },
                           label: const Text(
@@ -86,12 +91,8 @@ class StartPageWidget extends StatelessWidget {
                                   allowedExtensions: ['pdf']);
 
                           if (result != null) {
-                            //If user picked something, then extract text and send to IExtract API, then call callback
-                            sendForPDFExtract(result.files[0].bytes!,
-                                    result.files[0].name)
-                                .then((value) {
-                              onFileUploaded([sendToIExtract(value)]);
-                            });
+                            List<File> files = result.names.map((name) => File(name!)).toList();
+                              UploadedFileCallBack(files);
                           }
                         },
                         label: const Text(
@@ -112,12 +113,12 @@ class StartPageWidget extends StatelessWidget {
   }
 }
 
-///Main page widget. Works with futures to show text analyses
-class MainPageWidget extends StatefulWidget {
+///Text page widget. Works with futures to show text analyses
+class TextPageWidget extends StatefulWidget {
   //List with all analyses that user has
   final List<Future<AnalyzedText>> analysisRequests = [];
 
-  MainPageWidget({Key? key}) : super(key: key);
+  TextPageWidget({Key? key}) : super(key: key);
 
   ///Adds new analysis to list. Needs future of AnalysisData [request]
   void addNewAnalysis(Future<AnalyzedText> request) {
@@ -132,11 +133,11 @@ class MainPageWidget extends StatefulWidget {
   }
 
   @override
-  State<MainPageWidget> createState() => _MainPageWidget();
+  State<TextPageWidget> createState() => _TextPageWidget();
 }
 
-///Class that represents state controll of MainPageWidget
-class _MainPageWidget extends State<MainPageWidget> {
+///Class that represents state control of TextPageWidget
+class _TextPageWidget extends State<TextPageWidget> {
   @override
   Widget build(BuildContext context) {
     AnalyzedTextController analyzedTextController = AnalyzedTextController();
@@ -261,6 +262,44 @@ class _MainPageWidget extends State<MainPageWidget> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class FilePageWidget extends StatefulWidget {
+  //
+  //            sendForPDFExtract(files[i].bytes!,
+  //                                     result.files[i])
+  //
+  //
+
+  //List with all files that user uploaded for analysis
+  //Files should be sent to extract text from pdf then to analysis
+  final List<File> filesToAnalyze = [];
+
+  FilePageWidget({Key? key}) : super(key: key);
+
+
+  ///Adds multiple files to list
+  void addManyFiles(List<File> files) {
+    for (File file in files) {
+      filesToAnalyze.add(file);
+    }
+  }
+
+  @override
+  State<FilePageWidget> createState() => _FilePageWidget();
+}
+
+class _FilePageWidget extends State<FilePageWidget> {
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'iExtract',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
     );
