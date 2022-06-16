@@ -45,7 +45,6 @@ class _RootWidget extends State<RootWidget> {
 
   //Main page with files widget
   late MainPageFilesWidget mainPageFiles;
-
   @override
   void initState() {
     super.initState();
@@ -54,16 +53,18 @@ class _RootWidget extends State<RootWidget> {
     appState = AppPages.startPage;
 
     //Create start page widget, and listen for uploading event
-    startPage = StartPageWidget(onFileUploaded: (requests, mode) {
-      setState(() {
-        //When user uploads files switch to main page
-        appState =
-            mode == "text" ? AppPages.mainPageText : AppPages.mainPageFiles;
-        //Provide all requests made in start page to main page
-        mainPageText.addManyAnalyses(requests);
-        mainPageFiles.addManyAnalyses(requests);
-      });
-    });
+    startPage = StartPageWidget(
+      onFileUploaded: (requests, mode) {
+        setState(() {
+          //When user uploads files switch to main page
+          appState =
+              mode == "text" ? AppPages.mainPageText : AppPages.mainPageFiles;
+          //Provide all requests made in start page to main page
+          mainPageText.addManyAnalyses(requests);
+          mainPageFiles.addManyAnalyses(requests);
+        });
+      },
+    );
 
     //Create main page widget
     mainPageText = MainPageWidget();
