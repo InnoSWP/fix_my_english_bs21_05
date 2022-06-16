@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'analysis_data.dart';
+import '../utils/analysis_data.dart';
 
 class FileListController {}
 

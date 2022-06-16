@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'analysis_data.dart';
-import 'analyzed_text_widget.dart';
-import 'api_interactions.dart';
+import '../utils/analysis_data.dart';
+import '../widgets/analyzed_text_widget.dart';
+import '../utils/api_interactions.dart';
 
 ///Main page widget. Works with futures to show text analyses
 class MainPageWidget extends StatefulWidget {
   //List with all analyses that user has
   final List<Future<AnalyzedText>> analysisRequests = [];
-
-  MainPageWidget({Key? key}) : super(key: key);
 
   ///Adds new analysis to list. Needs future of AnalysisData [request]
   void addNewAnalysis(Future<AnalyzedText> request) {
@@ -26,13 +24,15 @@ class MainPageWidget extends StatefulWidget {
   State<MainPageWidget> createState() => _MainPageWidget();
 }
 
-///Class that represents state controll of MainPageWidget
+///Class that represents state control of TextPageWidget
 class _MainPageWidget extends State<MainPageWidget> {
+  TextEditingController textEditingController = TextEditingController();
+  AnalyzedTextController analyzedTextController = AnalyzedTextController();
+
+  bool canUpdateText = true;
+
   @override
   Widget build(BuildContext context) {
-    AnalyzedTextController analyzedTextController = AnalyzedTextController();
-    TextEditingController textEditingController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
           shadowColor: const Color(0xFFA20505),
@@ -79,8 +79,13 @@ class _MainPageWidget extends State<MainPageWidget> {
                         builder: (BuildContext context,
                             AsyncSnapshot<AnalyzedText> snapshot) {
                           if (snapshot.hasData) {
-                            debugPrint(snapshot.data!.rawText);
-                            textEditingController.text = snapshot.data!.rawText;
+                            if (canUpdateText) {
+                              textEditingController.text =
+                                  snapshot.data!.rawText;
+                              canUpdateText = false;
+                              debugPrint(snapshot.data!.rawText);
+                            }
+
                             return TextFormField(
                               controller: textEditingController,
                               minLines: 100,
@@ -134,7 +139,8 @@ class _MainPageWidget extends State<MainPageWidget> {
                                     analyzedTextController.changeAnalysis(
                                         sendToIExtract(
                                             textEditingController.text));
-                                    setState((){});
+
+                                    //canUpdateText = true;
                                   },
                                   label: const Text(
                                     "Analyze the text",

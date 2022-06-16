@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:swp/file_list.dart';
-import 'analysis_data.dart';
-import 'analyzed_text_widget.dart';
-import 'api_interactions.dart';
+import 'package:swp/widgets/file_list.dart';
+import '../utils/analysis_data.dart';
+import '../widgets/analyzed_text_widget.dart';
+import '../utils/api_interactions.dart';
 
 ///Main page widget. Works with futures to show text analyses
 class MainPageFilesWidget extends StatefulWidget {
@@ -38,9 +38,9 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
       appBar: AppBar(
           shadowColor: const Color(0xFFA20505),
           title: const Text(
-        'iExtract',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      )),
+            'iExtract',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
       body: SafeArea(
         child: Center(
           child: Row(

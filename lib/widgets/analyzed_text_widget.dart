@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'analysis_data.dart';
+import '../utils/analysis_data.dart';
 
 class AnalyzedTextController {
   late Function updateCallback;
@@ -124,7 +124,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                         borderRadius: BorderRadius.circular(15),
                         child: Container(
                           alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+                          padding: const EdgeInsets.only(
+                              top: 10, right: 10, left: 10),
                           color: const Color(0xFFFBFDF7),
                           child: RichText(
                             textAlign: TextAlign.left,
@@ -164,7 +165,9 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 );
               }
@@ -184,71 +187,3 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
     );
   }
 }
-/*
-Tooltip(
-                  message: snapshot.data!.analyzedSentences[index].description,
-                  decoration: const BoxDecoration(
-                    color: Colors.white38,
-                    shape: BoxShape.rectangle,
-                  ),
-                  textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Merriweather',
-                    fontWeight: FontWeight.bold,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      margin: const EdgeInsets.all(5),
-                      color: const Color(0xFFFBFDF7),
-                      child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: snapshot.data!.analyzedSentences[index]
-                            .splitOnThree()[0],
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'Merriweather',
-                        ),
-                      ),
-                      TextSpan(
-                        text: snapshot.data!.analyzedSentences[index]
-                            .splitOnThree()[1],
-                        style: TextStyle(
-                          backgroundColor: color,
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'Merriweather',
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                            '${snapshot.data!.analyzedSentences[index].splitOnThree()[2]}\n',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'Merriweather',
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                            '${snapshot.data!.analyzedSentences[index].description}\n',
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                          fontFamily: 'Merriweather',
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                    ),
-                  ),
-                );
- */
