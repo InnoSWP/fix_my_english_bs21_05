@@ -8,8 +8,6 @@ class MainPageWidget extends StatefulWidget {
   //List with all analyses that user has
   final List<Future<AnalyzedText>> analysisRequests = [];
 
-  MainPageWidget({Key? key}) : super(key: key);
-
   ///Adds new analysis to list. Needs future of AnalysisData [request]
   void addNewAnalysis(Future<AnalyzedText> request) {
     analysisRequests.add(request);
@@ -26,7 +24,7 @@ class MainPageWidget extends StatefulWidget {
   State<MainPageWidget> createState() => _MainPageWidget();
 }
 
-///Class that represents state controll of MainPageWidget
+///Class that represents state control of TextPageWidget
 class _MainPageWidget extends State<MainPageWidget> {
   @override
   Widget build(BuildContext context) {
