@@ -13,7 +13,7 @@ final themeData = ThemeData(
   primaryColorDark: const Color(0xFF7A370B),
   primaryColorLight: const Color(0xFFF2EEE1),
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFFF2EEE1),
+    backgroundColor: Color(0xFFF2EEE1),//0xFFF2EEE1
     titleTextStyle:
         TextStyle(color: Color(0xFF864921), fontSize: 50, fontFamily: 'Eczar'),
   ),

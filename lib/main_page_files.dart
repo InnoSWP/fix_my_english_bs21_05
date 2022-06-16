@@ -36,6 +36,7 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
 
     return Scaffold(
       appBar: AppBar(
+          shadowColor: const Color(0xFFA20505),
           title: const Text(
         'iExtract',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -47,7 +48,7 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
               SafeArea(
                 minimum: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(45),
+                  borderRadius: BorderRadius.circular(25),
                   child: Container(
                     color: const Color(0xFFFBFDF7),
                     padding: const EdgeInsets.only(

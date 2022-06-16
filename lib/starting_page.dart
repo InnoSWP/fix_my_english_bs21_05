@@ -21,6 +21,7 @@ class StartPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shadowColor: const Color(0xFFA20505),
         title: const Text(
           'iExtract',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -57,7 +58,9 @@ class StartPageWidget extends StatelessWidget {
                           style: BorderStyle.solid),
                     ),
                     border: const OutlineInputBorder(),
-                    label: const Center(child: Text('Enter text to analyze')),
+                    label: Container(
+                        alignment: Alignment.center,
+                        child: const Text('Enter text to analyze')),
                   ),
                   cursorColor: Theme.of(context).primaryColorDark,
                 ),
