@@ -1,6 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'pages.dart';
+import 'starting_page.dart';
+import 'main_page_text.dart';
+import 'main_page_files.dart';
 
 void main() {
   runApp(const FixMyEnglishApp());
@@ -52,7 +53,7 @@ class RootWidget extends StatefulWidget {
 }
 
 //Application pages
-enum AppPages { startPage, textPage, filePage }
+enum AppPages { startPage, mainPageText, mainPageFiles }
 
 ///Class that represents state controll of root widget
 class _RootWidget extends State<RootWidget> {
@@ -63,9 +64,11 @@ class _RootWidget extends State<RootWidget> {
   late StartPageWidget startPage;
 
   //Main page widget
-  late TextPageWidget textPage;
+  late MainPageWidget mainPageText;
 
-  late FilePageWidget filePage;
+  //Main page with files widget
+  late MainPageFilesWidget mainPageFiles;
+
   @override
   void initState() {
     super.initState();
@@ -74,27 +77,20 @@ class _RootWidget extends State<RootWidget> {
     appState = AppPages.startPage;
 
     //Create start page widget, and listen for uploading event
-    startPage = StartPageWidget(UploadedTextCallBack: (requests) {
+    startPage = StartPageWidget(onFileUploaded: (requests, mode) {
       setState(() {
-        //When user uploads text switch to text page
-          appState = AppPages.textPage;
-          //Provide all requests made in start page to main page
-          textPage.addManyAnalyses(requests);
+        //When user uploads files switch to main page
+        appState =
+            mode == "text" ? AppPages.mainPageText : AppPages.mainPageFiles;
+        //Provide all requests made in start page to main page
+        mainPageText.addManyAnalyses(requests);
+        mainPageFiles.addManyAnalyses(requests);
       });
-    },
-        UploadedFileCallBack: (files){
-            setState((){
-              appState = AppPages.filePage;
-              filePage.addManyFiles(files);
-            });
-        }
-    );
+    });
 
-    //Create text page widget
-    textPage = TextPageWidget();
-
-    //Create file page widget
-    filePage = FilePageWidget();
+    //Create main page widget
+    mainPageText = MainPageWidget();
+    mainPageFiles = MainPageFilesWidget();
   }
 
   @override
@@ -103,10 +99,10 @@ class _RootWidget extends State<RootWidget> {
     switch (appState) {
       case AppPages.startPage:
         return startPage;
-      case AppPages.textPage:
-        return textPage;
-      case AppPages.filePage:
-        return filePage;
+      case AppPages.mainPageText:
+        return mainPageText;
+      case AppPages.mainPageFiles:
+        return mainPageFiles;
     }
   }
 }

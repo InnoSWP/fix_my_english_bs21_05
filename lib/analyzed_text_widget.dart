@@ -58,35 +58,6 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
           return ListView.builder(
             itemCount: snapshot.data!.analyzedSentences.length,
             itemBuilder: (BuildContext context, int index) {
-              if (snapshot.data!.analyzedSentences[index].label == 'WORDNES3') {
-                return RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            '${snapshot.data!.analyzedSentences[index].sentence}\n',
-                        style: const TextStyle(
-                          backgroundColor: Color(0xFFDC7024),
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'Merriweather',
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                            '${snapshot.data!.analyzedSentences[index].description}\n',
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                          fontFamily: 'Merriweather',
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
               return RichText(
                 text: TextSpan(
                   children: [
