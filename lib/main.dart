@@ -1,6 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'pages.dart';
+import 'starting_page.dart';
+import 'main_page_text.dart';
+import 'main_page_files.dart';
 
 void main() {
   runApp(const FixMyEnglishApp());
@@ -52,7 +53,7 @@ class RootWidget extends StatefulWidget {
 }
 
 //Application pages
-enum AppPages { startPage, mainPage }
+enum AppPages { startPage, mainPageText, mainPageFiles }
 
 ///Class that represents state controll of root widget
 class _RootWidget extends State<RootWidget> {
@@ -63,7 +64,10 @@ class _RootWidget extends State<RootWidget> {
   late StartPageWidget startPage;
 
   //Main page widget
-  late MainPageWidget mainPage;
+  late MainPageWidget mainPageText;
+
+  //Main page with files widget
+  late MainPageFilesWidget mainPageFiles;
 
   @override
   void initState() {
@@ -73,17 +77,20 @@ class _RootWidget extends State<RootWidget> {
     appState = AppPages.startPage;
 
     //Create start page widget, and listen for uploading event
-    startPage = StartPageWidget(onFileUploaded: (requests) {
+    startPage = StartPageWidget(onFileUploaded: (requests, mode) {
       setState(() {
         //When user uploads files switch to main page
-        appState = AppPages.mainPage;
+        appState =
+            mode == "text" ? AppPages.mainPageText : AppPages.mainPageFiles;
         //Provide all requests made in start page to main page
-        mainPage.addManyAnalyses(requests);
+        mainPageText.addManyAnalyses(requests);
+        mainPageFiles.addManyAnalyses(requests);
       });
     });
 
     //Create main page widget
-    mainPage = MainPageWidget();
+    mainPageText = MainPageWidget();
+    mainPageFiles = MainPageFilesWidget();
   }
 
   @override
@@ -92,8 +99,10 @@ class _RootWidget extends State<RootWidget> {
     switch (appState) {
       case AppPages.startPage:
         return startPage;
-      case AppPages.mainPage:
-        return mainPage;
+      case AppPages.mainPageText:
+        return mainPageText;
+      case AppPages.mainPageFiles:
+        return mainPageFiles;
     }
   }
 }
