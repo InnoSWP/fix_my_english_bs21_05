@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'analysis_data.dart';
-import 'analyzed_text_widget.dart';
-import 'api_interactions.dart';
+import '../utils/analysis_data.dart';
+import '../widgets/analyzed_text_widget.dart';
+import '../utils/api_interactions.dart';
 
 ///Main page widget. Works with futures to show text analyses
 class MainPageWidget extends StatefulWidget {
@@ -28,17 +28,20 @@ class MainPageWidget extends StatefulWidget {
 
 ///Class that represents state controll of MainPageWidget
 class _MainPageWidget extends State<MainPageWidget> {
+  TextEditingController textEditingController = TextEditingController();
+  AnalyzedTextController analyzedTextController = AnalyzedTextController();
+
+  bool canUpdateText = true;
+
   @override
   Widget build(BuildContext context) {
-    AnalyzedTextController analyzedTextController = AnalyzedTextController();
-    TextEditingController textEditingController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
+          shadowColor: const Color(0xFFA20505),
           title: const Text(
-        'iExtract',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      )),
+            'iExtract',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
       body: SafeArea(
         child: Center(
           child: Row(
@@ -46,11 +49,12 @@ class _MainPageWidget extends State<MainPageWidget> {
               SafeArea(
                 minimum: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(45),
+                  //borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    color: const Color(0xFFFBFDF7),
+                    ///decoration: const BoxDecoration(),
+                    //color: const Color(0xFFFBFDF7),
                     padding: const EdgeInsets.only(
-                        right: 10, left: 10, top: 25, bottom: 25),
+                        right: 10, left: 10, top: 15, bottom: 15),
                     //margin: const EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.width * 0.65,
                     height: MediaQuery.of(context).size.height * 0.9,
@@ -62,13 +66,14 @@ class _MainPageWidget extends State<MainPageWidget> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  SafeArea(
-                    minimum: const EdgeInsets.only(top: 25, left: 20),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      height: MediaQuery.of(context).size.height * 0.5,
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 23),
+                      width: MediaQuery.of(context).size.width * 0.32,
+                      height: MediaQuery.of(context).size.height * 0.8,
                       alignment: Alignment.topRight,
                       //widget.analysisRequests.first
                       child: FutureBuilder(
@@ -76,13 +81,17 @@ class _MainPageWidget extends State<MainPageWidget> {
                         builder: (BuildContext context,
                             AsyncSnapshot<AnalyzedText> snapshot) {
                           if (snapshot.hasData) {
-                            debugPrint(snapshot.data!.rawText);
-                            textEditingController.text = snapshot.data!.rawText;
+                            if (canUpdateText) {
+                              textEditingController.text =
+                                  snapshot.data!.rawText;
+                              canUpdateText = false;
+                              debugPrint(snapshot.data!.rawText);
+                            }
+
                             return TextFormField(
-                              //initialValue: snapshot.data!.rawText,
                               controller: textEditingController,
-                              minLines: 25,
-                              maxLines: 25,
+                              minLines: 100,
+                              maxLines: 100,
                               keyboardType: TextInputType.multiline,
                               style: const TextStyle(
                                 fontSize: 15,
@@ -115,40 +124,57 @@ class _MainPageWidget extends State<MainPageWidget> {
                         },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 20, right: 20),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        analyzedTextController.changeAnalysis(
-                            sendToIExtract(textEditingController.text));
-                      },
-                      label: const Text(
-                        "Update the text",
-                        style: TextStyle(fontSize: 20),
+                    SafeArea(
+                      //minimum: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        width: MediaQuery.of(context).size.width * 0.32,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        child: Stack(
+                          children: [
+                            Expanded(
+                              flex: 9,
+                              child: Container(
+                                alignment: Alignment.bottomLeft,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    analyzedTextController.changeAnalysis(
+                                        sendToIExtract(
+                                            textEditingController.text));
+
+                                    //canUpdateText = true;
+                                  },
+                                  label: const Text(
+                                    "Analyze the text",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  icon: const Icon(Icons.short_text, size: 60),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                alignment: Alignment.bottomRight,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    //TODO: Extract function
+                                  },
+                                  label: const Text(
+                                    "Export CSV",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  icon: const Icon(Icons.arrow_downward,
+                                      size: 60),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      icon: const Icon(Icons.short_text, size: 60),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 8,
-                        left: 20,
-                        right: 20),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        //TODO: Extract function
-                      },
-                      label: const Text(
-                        "Export CSV",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      icon: const Icon(Icons.arrow_downward, size: 60),
-                    ),
-                  ),
-                ],
+                    )
+                  ],
+                ),
               ),
             ],
           ),
