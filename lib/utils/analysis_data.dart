@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+///Parse JSON to list of analyzed texts
 List<AnalyzedSentence> analyzedSentenceFromJson(String str) =>
     List<AnalyzedSentence>.from(
         json.decode(str).map((x) => AnalyzedSentence.fromJson(x)));
