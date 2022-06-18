@@ -57,8 +57,18 @@ class AnalyzedSentence {
 }
 
 class AnalyzedText {
+  final String? filename;
   final String rawText;
   final List<AnalyzedSentence> analyzedSentences;
 
-  AnalyzedText({required this.rawText, required this.analyzedSentences});
+  AnalyzedText(
+      {required this.rawText, required this.analyzedSentences, this.filename});
+
+  void saveAsCSV() {
+    String fileContent = "Sentence;Match;Label;Description\n";
+    for (AnalyzedSentence sentence in analyzedSentences) {
+      fileContent +=
+          "${sentence.sentence};${sentence.match};${sentence.label};${sentence.description}\n";
+    }
+  }
 }

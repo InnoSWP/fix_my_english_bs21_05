@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import 'package:swp/widgets/file_list.dart';
+import '../utils/analysis_data.dart';
+import '../widgets/analyzed_text_widget.dart';
+import '../utils/api_interactions.dart';
+
+///Main page widget. Works with futures to show text analyses
+class MainPageFilesWidget extends StatefulWidget {
+  //List with all analyses that user has
+  final List<Future<AnalyzedText>> analysisRequests = [];
+
+  MainPageFilesWidget({Key? key}) : super(key: key);
+
+  ///Adds new analysis to list. Needs future of AnalysisData [request]
+  void addNewAnalysis(Future<AnalyzedText> request) {
+    analysisRequests.add(request);
+  }
+
+  ///Adds multiple analysis to list. Needs list of futures of AnalysisData [request]
+  void addManyAnalyses(List<Future<AnalyzedText>> requests) {
+    for (Future<AnalyzedText> request in requests) {
+      analysisRequests.add(request);
+    }
+  }
+
+  @override
+  State<MainPageFilesWidget> createState() => _MainPageFilesWidget();
+}
+
+///Class that represents state control of TextPageWidget
+class _MainPageFilesWidget extends State<MainPageFilesWidget> {
+  FileListController fileController = FileListController();
+  AnalyzedTextController analyzedTextController = AnalyzedTextController();
+
+  bool canUpdateText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: const Text(
+        'iExtract',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      )),
+      body: SafeArea(
+        child: Center(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: ClipRRect(
+                  //borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    ///decoration: const BoxDecoration(),
+                    //color: const Color(0xFFFBFDF7),
+                    padding: const EdgeInsets.all(12),
+                    alignment: Alignment.centerLeft,
+                    child: AnalyzedTextWidget(
+                      analysis: widget.analysisRequests.first,
+                      controller: analyzedTextController,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                  flex: 4,
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Expanded(
+                            flex: 9,
+                            child: Container(
+                              alignment: Alignment.topRight,
+                              //widget.analysisRequests.first
+                              child: FileListWidget(
+                                controller: fileController,
+                                sequentialRequests: widget.analysisRequests,
+                                onSelected: (AnalyzedText analyzedText) {
+                                  analyzedTextController
+                                      .changeDirectCallback(analyzedText);
+                                },
+                              ),
+                            )),
+                        Expanded(
+                          flex: 1,
+                          child: Row(children: [
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.bottomLeft,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () async {
+                                      fileController.addNewFiles(
+                                          await sendFilesToIExtract());
+                                    },
+                                    label: const Text(
+                                      "Upload more",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    icon: const Icon(Icons.upload, size: 50),
+                                  ),
+                                )),
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.bottomRight,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      //TODO: Extract function
+                                    },
+                                    label: const Text(
+                                      "Export CSV",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    icon: const Icon(Icons.arrow_downward,
+                                        size: 50),
+                                  ),
+                                )),
+                          ]),
+                        )
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

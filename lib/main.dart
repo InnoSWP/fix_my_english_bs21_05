@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'starting_page.dart';
-import 'main_page_text.dart';
-import 'main_page_files.dart';
+import 'pages/starting_page.dart';
+import 'pages/main_page_text.dart';
+import 'pages/main_page_files.dart';
 
 void main() {
   runApp(const FixMyEnglishApp());
