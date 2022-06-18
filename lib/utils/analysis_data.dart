@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:swp/utils/web_file_creator.dart';
+
 List<AnalyzedSentence> analyzedSentenceFromJson(String str) =>
     List<AnalyzedSentence>.from(
         json.decode(str).map((x) => AnalyzedSentence.fromJson(x)));
@@ -70,5 +72,6 @@ class AnalyzedText {
       fileContent +=
           "${sentence.sentence};${sentence.match};${sentence.label};${sentence.description}\n";
     }
+    downloadFile(fileContent, "report.csv");
   }
 }

@@ -156,7 +156,12 @@ class _MainPageWidget extends State<MainPageWidget> {
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      //TODO: Extract function
+                                      if (analyzedTextController
+                                              .currentAnalysis !=
+                                          null) {
+                                        analyzedTextController.currentAnalysis!
+                                            .saveAsCSV();
+                                      }
                                     },
                                     label: const Text(
                                       "Export CSV",

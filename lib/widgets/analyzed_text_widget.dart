@@ -4,6 +4,7 @@ import '../utils/analysis_data.dart';
 class AnalyzedTextController {
   late Function(Future<AnalyzedText>) changeFutureCallback;
   late Function(AnalyzedText) changeDirectCallback;
+  AnalyzedText? currentAnalysis;
 
   void changeAnalysisFuture(Future<AnalyzedText> analysis) {
     changeFutureCallback(analysis);
@@ -38,12 +39,14 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
   late AnalyzedTextController controller;
 
   void _updateByFutureText(Future<AnalyzedText> newAnalysis) {
+    newAnalysis.then((value) => {controller.currentAnalysis = value});
     setState(() {
       analysis = newAnalysis;
     });
   }
 
   void _updateByDirectText(AnalyzedText newAnalysis) {
+    controller.currentAnalysis = newAnalysis;
     _updateByFutureText(_pseudoFuture(newAnalysis));
   }
 
@@ -60,6 +63,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
     controller = super.widget.controller;
     controller.changeFutureCallback = _updateByFutureText;
     controller.changeDirectCallback = _updateByDirectText;
+    analysis.then((value) => {controller.currentAnalysis = value});
   }
 
   @override
@@ -85,7 +89,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
               } else if (label == 'WORNES3') {
                 color = const Color(0xFFFF6C00);
               }
-              Widget result = const Text('asd');
+              Widget result = const Text('asd'); //Чо за асд? Это кто
               if (snapshot.data!.analyzedSentences[index].match == '' &&
                   label == 'WORDNES3') {
                 result = Tooltip(
