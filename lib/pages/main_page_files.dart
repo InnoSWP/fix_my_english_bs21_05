@@ -107,10 +107,15 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      //TODO: Extract function
+                                      for (var curAnalysis
+                                          in fileController.allAnalyzes) {
+                                        if (curAnalysis != null) {
+                                          curAnalysis.saveAsCSV();
+                                        }
+                                      }
                                     },
                                     label: const Text(
-                                      "Export CSV",
+                                      "Export ALL to CSV",
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     icon: const Icon(Icons.arrow_downward,
