@@ -3,6 +3,7 @@ import '../utils/analysis_data.dart';
 
 class FileListController {
   late Function(List<Future<AnalyzedText>>) addNewFiles;
+  List<AnalyzedText?> allAnalyzes = [];
 
   void addFiles(List<Future<AnalyzedText>> filesWithAnalysis) {
     addNewFiles(filesWithAnalysis);
@@ -33,6 +34,7 @@ class _FileListWidget extends State<FileListWidget> {
   void initState() {
     super.initState();
     analyzedTexts = [];
+    widget.controller.allAnalyzes = analyzedTexts;
     for (var req in widget.sequentialRequests) {
       req.then((value) {
         int nullIndex = analyzedTexts.indexOf(null);
