@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:swp/widgets/logo_widget.dart';
 import '../utils/analysis_data.dart';
 import '../utils/api_interactions.dart';
 import '../utils/moofiy_color.dart';
-import '../utils/pdf_reader.dart';
 
 ///Starting page widget with upload button, text field, and logo
 class StartPageWidget extends StatelessWidget {
@@ -22,7 +21,6 @@ class StartPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("!!!");
     return Scaffold(
         body: SafeArea(
       child: Stack(children: [
@@ -42,17 +40,11 @@ class StartPageWidget extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'iExtract',
-                    style: TextStyle(
-                        color: MoofiyColors.colorPrimaryRedCaramel,
-                        fontSize: 97,
-                        fontFamily: 'Eczar',
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
+                const Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: IExtractLogo(),
+                    )),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.6,
                   height: MediaQuery.of(context).size.height * 0.45,
@@ -102,25 +94,7 @@ class StartPageWidget extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.08,
                     child: ElevatedButton.icon(
                         onPressed: () async {
-                          //Pick pdf files from device
-                          FilePickerResult? result = await FilePicker.platform
-                              .pickFiles(
-                                  allowMultiple: true,
-                                  type: FileType.custom,
-                                  allowedExtensions: ['pdf']);
-
-                          if (result != null) {
-                            //If user picked something, then extract text and send to IExtract API, then call callback
-                            List<Future<AnalyzedText>> requests = [];
-
-                            for (PlatformFile platfromFile in result.files) {
-                              requests.add(sendToIExtract(
-                                  PDFToRawTextConverter(platfromFile.bytes!)
-                                      .result));
-                            }
-
-                            onFileUploaded(requests, "files");
-                          }
+                          onFileUploaded(await sendFilesToIExtract(), "files");
                         },
                         icon: const Icon(
                           Icons.picture_as_pdf_sharp,

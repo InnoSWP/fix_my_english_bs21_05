@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-///Parse JSON to list of analyzed texts
+import 'package:swp/utils/web_file_creator.dart';
+
 List<AnalyzedSentence> analyzedSentenceFromJson(String str) =>
     List<AnalyzedSentence>.from(
         json.decode(str).map((x) => AnalyzedSentence.fromJson(x)));
@@ -58,8 +59,19 @@ class AnalyzedSentence {
 }
 
 class AnalyzedText {
+  final String? filename;
   final String rawText;
   final List<AnalyzedSentence> analyzedSentences;
 
-  AnalyzedText({required this.rawText, required this.analyzedSentences});
+  AnalyzedText(
+      {required this.rawText, required this.analyzedSentences, this.filename});
+
+  void saveAsCSV() {
+    String fileContent = "Sentence;Match;Label;Description\n";
+    for (AnalyzedSentence sentence in analyzedSentences) {
+      fileContent +=
+          "${sentence.sentence};${sentence.match};${sentence.label};${sentence.description}\n";
+    }
+    downloadFile(fileContent, "report.csv");
+  }
 }

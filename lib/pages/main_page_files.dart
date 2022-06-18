@@ -27,35 +27,33 @@ class MainPageFilesWidget extends StatefulWidget {
   State<MainPageFilesWidget> createState() => _MainPageFilesWidget();
 }
 
-///Class that represents state controll of MainPageWidget
+///Class that represents state control of TextPageWidget
 class _MainPageFilesWidget extends State<MainPageFilesWidget> {
+  FileListController fileController = FileListController();
+  AnalyzedTextController analyzedTextController = AnalyzedTextController();
+
+  bool canUpdateText = true;
+
   @override
   Widget build(BuildContext context) {
-    AnalyzedTextController analyzedTextController = AnalyzedTextController();
-    FileListController controller = FileListController();
-
     return Scaffold(
       appBar: AppBar(
-          shadowColor: const Color(0xFFA20505),
           title: const Text(
-            'iExtract',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )),
+        'iExtract',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      )),
       body: SafeArea(
         child: Center(
           child: Row(
             children: [
-              SafeArea(
-                minimum: const EdgeInsets.all(20),
+              Expanded(
+                flex: 6,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
+                  //borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    color: const Color(0xFFFBFDF7),
-                    padding: const EdgeInsets.only(
-                        right: 10, left: 10, top: 25, bottom: 25),
-                    //margin: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    height: MediaQuery.of(context).size.height * 0.9,
+                    ///decoration: const BoxDecoration(),
+                    //color: const Color(0xFFFBFDF7),
+                    padding: const EdgeInsets.all(12),
                     alignment: Alignment.centerLeft,
                     child: AnalyzedTextWidget(
                       analysis: widget.analysisRequests.first,
@@ -64,39 +62,71 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  SafeArea(
-                    minimum: const EdgeInsets.only(top: 25, left: 20),
-                    child: Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        alignment: Alignment.topRight,
-                        //widget.analysisRequests.first
-                        child: FileListWidget(
-                          controller: controller,
-                          info: widget.analysisRequests,
-                        )),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 8,
-                        left: 20,
-                        right: 20),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        //TODO: Extract function
-                      },
-                      label: const Text(
-                        "Export CSV",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      icon: const Icon(Icons.arrow_downward, size: 60),
+              Expanded(
+                  flex: 4,
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Expanded(
+                            flex: 9,
+                            child: Container(
+                              alignment: Alignment.topRight,
+                              //widget.analysisRequests.first
+                              child: FileListWidget(
+                                controller: fileController,
+                                sequentialRequests: widget.analysisRequests,
+                                onSelected: (AnalyzedText analyzedText) {
+                                  analyzedTextController
+                                      .changeDirectCallback(analyzedText);
+                                },
+                              ),
+                            )),
+                        Expanded(
+                          flex: 1,
+                          child: Row(children: [
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.bottomLeft,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () async {
+                                      fileController.addNewFiles(
+                                          await sendFilesToIExtract());
+                                    },
+                                    label: const Text(
+                                      "Upload more",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    icon: const Icon(Icons.upload, size: 50),
+                                  ),
+                                )),
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.bottomRight,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      for (var curAnalysis
+                                          in fileController.allAnalyzes) {
+                                        if (curAnalysis != null) {
+                                          curAnalysis.saveAsCSV();
+                                        }
+                                      }
+                                    },
+                                    label: const Text(
+                                      "Export ALL to CSV",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    icon: const Icon(Icons.arrow_downward,
+                                        size: 50),
+                                  ),
+                                )),
+                          ]),
+                        )
+                      ],
                     ),
-                  ),
-                ],
-              ),
+                  )),
             ],
           ),
         ),
