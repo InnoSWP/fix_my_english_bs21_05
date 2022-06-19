@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MoofiyColors {
-  static final Color colorPrimaryRedCaramelDark = Color(0xFF7A370B);
-  static final Color colorPrimaryRedCaramel = Color(0xFF864921);
-  static final Color colorSecondaryGreenPlant = Color(0xFF4D6658);
-  static final Color colorSurfaceSmoothGreenPlant = Color(0xFFFBFDF7);
-  static final Color colorPrimaryLightRedCaramel = Color(0xFFF2EEE1);
-  static final Color colorSecondaryLightGreenPlant = Color(0xFFE9F1E8);
+  static const Color colorPrimaryRedCaramelDark = Color(0xFF7A370B);
+  static const Color colorPrimaryRedCaramel = Color(0xFF864921);
+  static const Color colorSecondaryGreenPlant = Color(0xFF4D6658);
+  static const Color colorSurfaceSmoothGreenPlant = Color(0xFFFBFDF7);
+  static const Color colorPrimaryLightRedCaramel = Color(0xFFF2EEE1);
+  static const Color colorSecondaryLightGreenPlant = Color(0xFFE9F1E8);
   static final Color colorTextSmoothBlack = Color(0xFF49454F);
   static final themeData = ThemeData(
     scaffoldBackgroundColor: const Color(0xFFF2EEE1),

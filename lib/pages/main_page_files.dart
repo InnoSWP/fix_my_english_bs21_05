@@ -46,26 +46,24 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
         child: Center(
           child: Row(
             children: [
-              Expanded(
-                flex: 6,
-                child: ClipRRect(
-                  //borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    ///decoration: const BoxDecoration(),
-                    //color: const Color(0xFFFBFDF7),
-                    padding: const EdgeInsets.all(12),
-                    alignment: Alignment.centerLeft,
-                    child: AnalyzedTextWidget(
-                      analysis: widget.analysisRequests.first,
-                      controller: analyzedTextController,
-                    ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Container(
+                  ///decoration: const BoxDecoration(),
+                  color: const Color(0xFFFBFDF7),
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: AnalyzedTextWidget(
+                    analysis: widget.analysisRequests.first,
+                    controller: analyzedTextController,
                   ),
                 ),
               ),
               Expanded(
                   flex: 4,
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: Column(
                       children: [
                         Expanded(
