@@ -58,6 +58,7 @@ class AnalyzedSentence {
   }
 }
 
+///  Contain dat from API with report about mistakes
 class AnalyzedText {
   final String? filename;
   final String rawText;
