@@ -3,6 +3,7 @@ import 'package:swp/widgets/file_list.dart';
 import '../utils/analysis_data.dart';
 import '../widgets/analyzed_text_widget.dart';
 import '../utils/api_interactions.dart';
+import 'package:file_picker/file_picker.dart';
 
 ///Main page widget. Works with futures to show text analyses
 class MainPageFilesWidget extends StatefulWidget {
@@ -89,9 +90,13 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                                   alignment: Alignment.bottomLeft,
                                   child: ElevatedButton.icon(
                                     onPressed: () async {
-                                      fileController.addNewFiles(
-                                          await sendFilesToIExtract());
-                                    },
+                                      FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                          allowMultiple: true, type: FileType.custom, allowedExtensions: ['pdf']);
+                                      if(result!=null) {
+                                        fileController.addNewFiles(
+                                            await sendFilesToIExtract(result));
+                                      }
+                                      },
                                     label: const Text(
                                       "Upload more",
                                       style: TextStyle(fontSize: 20),
