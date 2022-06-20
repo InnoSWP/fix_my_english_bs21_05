@@ -67,10 +67,12 @@ class AnalyzedText {
       {required this.rawText, required this.analyzedSentences, this.filename});
 
   void saveAsCSV() {
-    String fileContent = "Sentence;Match;Label;Description\n";
+    String fileContent = "1;Match;Sentence;Label;Description\n";
+    int i = 2;
     for (AnalyzedSentence sentence in analyzedSentences) {
       fileContent +=
-          "${sentence.sentence};${sentence.match};${sentence.label};${sentence.description}\n";
+          "$i;${sentence.match};${sentence.sentence};${sentence.label};${sentence.description}\n";
+      i++;
     }
     downloadFile(fileContent, "report.csv");
   }
