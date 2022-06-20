@@ -72,7 +72,7 @@ class AnalyzedText {
     int i = 2;
     for (AnalyzedSentence sentence in analyzedSentences) {
       fileContent +=
-          "$i;${sentence.match};${sentence.sentence};${sentence.label};${sentence.description}\n";
+          "$i;${sentence.match};${sentence.sentence.replaceAll("\n", " ")};${sentence.label};${sentence.description}\n";
       i++;
     }
     downloadFile(fileContent, "report.csv");

@@ -46,13 +46,13 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
         child: Center(
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(25),
+              Expanded(
+                flex: 6,
                 child: Container(
                   ///decoration: const BoxDecoration(),
-                  color: const Color(0xFFFBFDF7),
+                  //color: const Color(0xFFFBFDF7),
                   padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.all(10),
+                  //margin: const EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
                   child: AnalyzedTextWidget(
                     analysis: widget.analysisRequests.first,
