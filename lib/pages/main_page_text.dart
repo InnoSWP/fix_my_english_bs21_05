@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../utils/analysis_data.dart';
 import '../widgets/analyzed_text_widget.dart';
 import '../utils/api_interactions.dart';
@@ -40,32 +41,40 @@ class _MainPageWidget extends State<MainPageWidget> {
         style: TextStyle(fontWeight: FontWeight.bold),
       )),
       body: SafeArea(
-        child: Center(
-          child: Row(
-            children: [
-              Expanded(
-                flex: 6,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(45),
-                  child: Container(
-                    ///decoration: const BoxDecoration(),
-                    //color: const Color(0xFFFBFDF7),
-                    padding: const EdgeInsets.all(12),
-                    alignment: Alignment.centerLeft,
-                    child: AnalyzedTextWidget(
-                      analysis: widget.analysisRequests.first,
-                      controller: analyzedTextController,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SvgPicture.asset(
+                fit: BoxFit.cover,
+                "assets/clouds_2.svg",
+                color: const Color.fromARGB(255, 222, 207, 180),
+              ),
+            ),
+            Center(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: Container(
+                      ///decoration: const BoxDecoration(),
+                      //color: const Color(0xFFFBFDF7),
+                      padding: const EdgeInsets.all(12),
+                      //margin: const EdgeInsets.all(10),
+                      alignment: Alignment.centerLeft,
+                      child: AnalyzedTextWidget(
+                        analysis: widget.analysisRequests.first,
+                        controller: analyzedTextController,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      children: [
-                        Expanded(
+                  Expanded(
+                    flex: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Expanded(
                             flex: 9,
                             child: Container(
                               alignment: Alignment.topRight,
@@ -80,7 +89,6 @@ class _MainPageWidget extends State<MainPageWidget> {
                                           snapshot.data!.rawText;
                                       canUpdateText = false;
                                     }
-
                                     return TextFormField(
                                       controller: textEditingController,
                                       minLines: null,
@@ -120,6 +128,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                                     );
                                   } else {
                                     return Container(
+                                      color: const Color(0xFFFBFDF7),
                                       alignment: Alignment.center,
                                       child: CircularProgressIndicator(
                                         color: Theme.of(context).primaryColor,
@@ -128,56 +137,67 @@ class _MainPageWidget extends State<MainPageWidget> {
                                   }
                                 },
                               ),
-                            )),
-                        Expanded(
-                          flex: 1,
-                          child: Row(children: [
-                            Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.bottomLeft,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      analyzedTextController
-                                          .changeAnalysisFuture(sendToIExtract(
-                                              textEditingController.text));
-                                    },
-                                    label: const Text(
-                                      "Analyze the text",
-                                      style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        analyzedTextController
+                                            .changeAnalysisFuture(
+                                          sendToIExtract(
+                                              textEditingController.text),
+                                        );
+                                      },
+                                      label: const Text(
+                                        "Analyze the text",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      icon: const Icon(Icons.short_text,
+                                          size: 50),
                                     ),
-                                    icon:
-                                        const Icon(Icons.short_text, size: 50),
                                   ),
-                                )),
-                            Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.bottomRight,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      if (analyzedTextController
-                                              .currentAnalysis !=
-                                          null) {
-                                        analyzedTextController.currentAnalysis!
-                                            .saveAsCSV();
-                                      }
-                                    },
-                                    label: const Text(
-                                      "Export CSV",
-                                      style: TextStyle(fontSize: 20),
+                                ),
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    alignment: Alignment.bottomRight,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        if (analyzedTextController
+                                                .currentAnalysis !=
+                                            null) {
+                                          analyzedTextController
+                                              .currentAnalysis!
+                                              .saveAsCSV();
+                                        }
+                                      },
+                                      label: const Text(
+                                        "Export CSV",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      icon: const Icon(Icons.arrow_downward,
+                                          size: 50),
                                     ),
-                                    icon: const Icon(Icons.arrow_downward,
-                                        size: 50),
                                   ),
-                                )),
-                          ]),
-                        )
-                      ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  )),
-            ],
-          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
