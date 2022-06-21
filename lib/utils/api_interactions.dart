@@ -34,13 +34,9 @@ Future<AnalyzedText> sendToIExtract(String text, [String? filename]) async {
       analyzedSentences: analyzedSentenceFromJson(response.body));
 }
 
-Future<List<Future<AnalyzedText>>> sendFilesToIExtract() async {
+Future<List<Future<AnalyzedText>>> sendFilesToIExtract(FilePickerResult result) async {
   List<Future<AnalyzedText>> sequentialFutures = [];
-  //Pick pdf files from device
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true, type: FileType.custom, allowedExtensions: ['pdf']);
 
-  if (result != null) {
     //If user picked something, then extract text and send to IExtract API, then call callback
     Future<AnalyzedText> prevText = sendToIExtract(
         PDFToRawTextConverter(result.files[0].bytes!).result,
@@ -53,8 +49,6 @@ Future<List<Future<AnalyzedText>>> sendFilesToIExtract() async {
           result.files[i].name));
     }
     return sequentialFutures;
-  }
-  return [];
 }
 
 Future<AnalyzedText> connectFuture(
