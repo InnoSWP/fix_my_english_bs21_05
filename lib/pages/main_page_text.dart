@@ -36,10 +36,11 @@ class _MainPageWidget extends State<MainPageWidget> {
 
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-        'iExtract',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      )),
+        title: const Text(
+          'iExtract',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
