@@ -74,6 +74,33 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
         if (snapshot.hasData &&
             snapshot.connectionState == ConnectionState.done) {
           //If future receive text, show it
+          //debugPrint(snapshot.data!.analyzedSentences.toString());
+          if (snapshot.data!.analyzedSentences.isEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: SingleChildScrollView(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  padding: const EdgeInsets.all(12),
+                  color: const Color(0xECFBFDF7),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Wow, man! Your text does not have mistakes. Respect!',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 35,
+                        fontFamily: 'Merriweather',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+          String letters =
+              'zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP';
           List<TextSpan> text = [];
           List<bool> used = [];
           List<String> descriptions = [];
@@ -85,9 +112,13 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
             String match = s.match.compareTo('') == 0 ? s.sentence : s.match;
             for (int i = 0; i < used.length - match.length; i++) {
               if (snapshot.data!.rawText
-                      .substring(i, i + match.length)
-                      .compareTo(match) ==
-                  0) {
+                          .substring(i, i + match.length)
+                          .compareTo(match) ==
+                      0 /*&&
+                  (!letters
+                          .contains(snapshot.data!.rawText[i + match.length]) ||
+                      !letters.contains(snapshot.data!.rawText[i - 1]))*/
+                  ) {
                 used.fillRange(i, i + match.length, true);
                 descriptions.fillRange(i, i + match.length, s.description);
               }
@@ -95,42 +126,51 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
           }
           for (int i = 0; i < used.length; i++) {
             if (used[i]) {
-              text.add(TextSpan(
-                text: snapshot.data!.rawText[i],
-                style: const TextStyle(
-                  backgroundColor: Color(0xffeed912),
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Merriweather',
-                  //fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-                onEnter: (event) {
-                  // debugPrint(descriptions[i]);
-                  Navigator.push(
+              text.add(
+                TextSpan(
+                  text: snapshot.data!.rawText[i],
+                  style: const TextStyle(
+                    backgroundColor: Color(0xffeed912),
+                    //0xffeed912
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontFamily: 'Merriweather',
+                    //fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  onEnter: (event) {
+                    // debugPrint(descriptions[i]);
+                    Navigator.push(
                       context,
                       DialogRoute(
-                          context: context,
-                          builder: (context) {
-                            return SimpleDialog(title: Text(descriptions[i]));
-                          }));
-                },
-              ));
-            } else {
-              text.add(TextSpan(
-                text: snapshot.data!.rawText[i],
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Merriweather',
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(title: Text(descriptions[i]));
+                        },
+                      ),
+                    );
+                  },
                 ),
-              ));
+              );
+            } else {
+              text.add(
+                TextSpan(
+                  text: snapshot.data!.rawText[i],
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontFamily: 'Merriweather',
+                  ),
+                ),
+              );
             }
           }
           return ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: SingleChildScrollView(
               child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsets.all(12),
                 color: const Color(0xFFFBFDF7),
                 child: RichText(
@@ -142,139 +182,17 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
         } else {
           //If text is not recieved yet, show progress indicator
           return ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                color: const Color(0xFFFBFDF7),
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(
-                  color: Color(0xFF864921),
-                ),
-              ));
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              color: const Color(0xFFFBFDF7),
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                color: Color(0xFF864921),
+              ),
+            ),
+          );
         }
       },
     );
   }
 }
-
-/// from line 58
-/*
-        return ListView.builder(
-            itemCount: snapshot.data!.analyzedSentences.length,
-            itemBuilder: (BuildContext context, int index) {
-              var label = snapshot.data!.analyzedSentences[index].label;
-              Color color = const Color(0xFFF38A40);
-              if (label == 'DIGIT8') {
-                color = const Color(0xFFF34545);
-              } else if (label == 'PRONOUN4') {
-                color = const Color(0xFFFCAE10);
-              } else if (label == 'SPOKN1') {
-                color = const Color(0xFFFF7134);
-              } else if (label == 'VOCAB5') {
-                color = const Color(0xFFFF0000);
-              } else if (label == 'WORNES3') {
-                color = const Color(0xFFFF6C00);
-              }
-              Widget result = const Text('asd');
-              if (snapshot.data!.analyzedSentences[index].match == '' &&
-                  label == 'WORDNES3') {
-                result = Tooltip(
-                  message: snapshot.data!.analyzedSentences[index].description,
-                  decoration: const BoxDecoration(
-                    color: Colors.white38,
-                    shape: BoxShape.rectangle,
-                  ),
-                  textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Merriweather',
-                    fontWeight: FontWeight.bold,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      margin: const EdgeInsets.all(5),
-                      color: const Color(0xFFFBFDF7),
-                      child: Text(
-                        '${snapshot.data!.analyzedSentences[index].sentence}\n',
-                        style: TextStyle(
-                          backgroundColor: color,
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: 'Merriweather',
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                result = Column(
-                  children: [
-                    Tooltip(
-                      message:
-                          snapshot.data!.analyzedSentences[index].description,
-                      decoration: const BoxDecoration(
-                        color: Colors.black12,
-                        shape: BoxShape.rectangle,
-                      ),
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontFamily: 'Merriweather',
-                        fontWeight: FontWeight.bold,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.only(
-                              top: 10, right: 10, left: 10),
-                          color: const Color(0xFFFBFDF7),
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: snapshot.data!.analyzedSentences[index]
-                                      .splitOnThree()[0],
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'Merriweather',
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: snapshot.data!.analyzedSentences[index]
-                                      .splitOnThree()[1],
-                                  style: TextStyle(
-                                    backgroundColor: color,
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'Merriweather',
-                                  ),
-                                ),
-                                TextSpan(
-                                  text:
-                                      '${snapshot.data!.analyzedSentences[index].splitOnThree()[2]}\n',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'Merriweather',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                );
-              }
-              return result;
-            },
-          );
- */
