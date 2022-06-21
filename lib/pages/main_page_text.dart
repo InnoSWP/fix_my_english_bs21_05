@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:swp/utils/moofiy_color.dart';
 import '../utils/analysis_data.dart';
 import '../widgets/analyzed_text_widget.dart';
 import '../utils/api_interactions.dart';
@@ -8,6 +9,9 @@ import '../utils/api_interactions.dart';
 class MainPageWidget extends StatefulWidget {
   //List with all analyses that user has
   final List<Future<AnalyzedText>> analysisRequests = [];
+  final VoidCallback rollbackAction;
+
+  MainPageWidget({Key? key, required this.rollbackAction}) : super(key: key);
 
   ///Adds new analysis to list. Needs future of AnalysisData [request]
   void addNewAnalysis(Future<AnalyzedText> request) {
@@ -36,10 +40,21 @@ class _MainPageWidget extends State<MainPageWidget> {
 
     return Scaffold(
       appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_sharp,
+              color: MoofiyColors.colorPrimaryRedCaramel,
+              size: 40,
+            ),
+            onPressed: () {
+              widget.analysisRequests.clear();
+              widget.rollbackAction();
+            },
+          ),
           title: const Text(
-        'iExtract',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      )),
+            'Fix My English',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
       body: SafeArea(
         child: Stack(
           children: [
