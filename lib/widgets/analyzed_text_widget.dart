@@ -99,8 +99,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
               ),
             );
           }
-          String letters =
-              'zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP';
+          //String letters =
+          //  'zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP';
           List<TextSpan> text = [];
           List<bool> used = [];
           List<String> descriptions = [];

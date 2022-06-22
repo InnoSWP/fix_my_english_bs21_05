@@ -136,7 +136,7 @@ class BeautifulDelimiter extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.05,
               )),
         ),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.06,
           child: const Center(
               child: Text(
