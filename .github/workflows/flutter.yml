@@ -36,4 +36,4 @@ jobs:
       
       # Run unit-tests
       - name: run tests
-        run: flutter test --platfrom chrome
+        run: flutter test --platform chrome
