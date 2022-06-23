@@ -203,7 +203,6 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                       //   borderRadius: BorderRadius.circular(20),
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.07,
-                        padding: const EdgeInsets.all(19),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: const Color(0xFFFBFDF7),
@@ -215,13 +214,15 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                         child: ValueListenableBuilder<String>(
                           valueListenable: descriptionListener,
                           builder: (context, value, child) {
-                            return Text(
-                              value,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                fontFamily: 'Merriweather',
+                            return Center(
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  fontFamily: 'Merriweather',
+                                ),
                               ),
                             );
                           },
@@ -243,7 +244,6 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                       //  borderRadius: BorderRadius.circular(20),
                       child: Container(
                           height: MediaQuery.of(context).size.height * 0.07,
-                          padding: const EdgeInsets.all(12),
                           margin: const EdgeInsets.only(left: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
