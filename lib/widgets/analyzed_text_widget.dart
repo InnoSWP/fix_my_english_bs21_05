@@ -87,7 +87,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
               child: SingleChildScrollView(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(12),
                   color: const Color(0xECFBFDF7),
                   child: Container(
