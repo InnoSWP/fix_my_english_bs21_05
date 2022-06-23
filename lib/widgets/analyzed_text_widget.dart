@@ -68,7 +68,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
     controller.changeFutureCallback = _updateByFutureText;
     controller.changeDirectCallback = _updateByDirectText;
     analysis.then((value) => {controller.currentAnalysis = value});
-    descriptionListener = ValueNotifier<String>('Hover highlighted sentence for information.');
+    descriptionListener =
+        ValueNotifier<String>('Hover highlighted sentence for information.');
   }
 
   @override
@@ -168,26 +169,27 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
             children: [
               Expanded(
                 flex: 10,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    //padding: const EdgeInsets.all(12),
-                    //0xFFFBFDF7
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color(0xFFFBFDF7),
-                      border: Border.all(
-                        color: const Color(0xFF864921),
-                        width: 2,
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: RichText(
-                        text: TextSpan(children: text),
-                      ),
+                //child: ClipRRect(
+                //  borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  //margin: const EdgeInsets.all(7),
+                  padding: const EdgeInsets.all(12),
+                  //0xFFFBFDF7
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFFBFDF7),
+                    border: Border.all(
+                      color: const Color(0xFF864921),
+                      width: 2,
                     ),
                   ),
+                  child: SingleChildScrollView(
+                    child: RichText(
+                      text: TextSpan(children: text),
+                    ),
+                  ),
+                  // ),
                 ),
               ),
               Expanded(
@@ -196,70 +198,84 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                      flex: 9,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.07,
-                          padding: const EdgeInsets.all(19),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFFFBFDF7),
-                            border: Border.all(
-                              color: const Color(0xFF864921),
-                              width: 2,
-                            ),
+                      flex: 10,
+                      //child: ClipRRect(
+                      //   borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        padding: const EdgeInsets.all(19),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color(0xFFFBFDF7),
+                          border: Border.all(
+                            color: const Color(0xFF864921),
+                            width: 2,
                           ),
-                          child: ValueListenableBuilder<String>(
-                            valueListenable: descriptionListener,
-                            builder: (context, value, child) {
-                              return Text(
-                                value,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  fontFamily: 'Merriweather',
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Hover highlighted sentence',
-                              style: TextStyle(
+                        ),
+                        child: ValueListenableBuilder<String>(
+                          valueListenable: descriptionListener,
+                          builder: (context, value, child) {
+                            return Text(
+                              value,
+                              style: const TextStyle(
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                                 fontSize: 20,
                                 fontFamily: 'Merriweather',
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.07,
-                          //  padding: const EdgeInsets.only(top: 12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFFFBFDF7),
-                            border: Border.all(
-                              color: const Color(0xFF864921),
-                              width: 2,
-                            ),
-                          ),
-                          child: Text(
-                            snapshot.data!.analyzedSentences.length.toString(),
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 35,
+                            );
+                          },
+                          child: const Text(
+                            'Hover highlighted sentence',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
                               fontFamily: 'Merriweather',
                             ),
                           ),
                         ),
+                        // ),
                       ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      //child: ClipRRect(
+                      //  borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                          height: MediaQuery.of(context).size.height * 0.07,
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(left: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xFFFBFDF7),
+                            border: Border.all(
+                              color: const Color(0xFF864921),
+                              width: 2,
+                            ),
+                          ),
+                          child: Tooltip(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFFBFDF7),
+                            ),
+                            message: 'Number of mistakes',
+                            textStyle: const TextStyle(
+                              fontSize: 19,
+                              color: Color(0xFF864921),
+                              fontFamily: 'Merriweather',
+                            ),
+                            child: Text(
+                              snapshot.data!.analyzedSentences.length
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color(0xFF864921),
+                                fontSize: 35,
+                                fontFamily: 'Merriweather',
+                              ),
+                            ),
+                          )
+                          // ),
+                          ),
                     ),
                   ],
                 ),
