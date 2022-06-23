@@ -43,6 +43,7 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_sharp,
@@ -59,57 +60,59 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
       body: SafeArea(
-          child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SvgPicture.asset(
-              fit: BoxFit.cover,
-              "assets/clouds_2.svg",
-              color: const Color.fromARGB(255, 222, 207, 180),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SvgPicture.asset(
+                fit: BoxFit.cover,
+                "assets/clouds_2.svg",
+                color: const Color.fromARGB(255, 222, 207, 180),
+              ),
             ),
-          ),
-          Center(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                    ///decoration: const BoxDecoration(),
-                    //color: const Color(0xFFFBFDF7),
-                    padding: const EdgeInsets.all(12),
-                    //margin: const EdgeInsets.all(10),
-                    alignment: Alignment.centerLeft,
-                    child: AnalyzedTextWidget(
-                      analysis: widget.analysisRequests.first,
-                      controller: analyzedTextController,
+            Center(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: Container(
+                      ///decoration: const BoxDecoration(),
+                      //color: const Color(0xFFFBFDF7),
+                      padding: const EdgeInsets.all(12),
+                      //margin: const EdgeInsets.all(10),
+                      alignment: Alignment.centerLeft,
+                      child: AnalyzedTextWidget(
+                        analysis: widget.analysisRequests.first,
+                        controller: analyzedTextController,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
+                  Expanded(
                     flex: 4,
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
                           Expanded(
-                              flex: 9,
-                              child: Container(
-                                alignment: Alignment.topRight,
-                                //widget.analysisRequests.first
-                                child: FileListWidget(
-                                  controller: fileController,
-                                  sequentialRequests: widget.analysisRequests,
-                                  onSelected: (AnalyzedText analyzedText) {
-                                    analyzedTextController
-                                        .changeDirectCallback(analyzedText);
-                                  },
-                                ),
-                              )),
+                            flex: 9,
+                            child: Container(
+                              alignment: Alignment.topRight,
+                              //widget.analysisRequests.first
+                              child: FileListWidget(
+                                controller: fileController,
+                                sequentialRequests: widget.analysisRequests,
+                                onSelected: (AnalyzedText analyzedText) {
+                                  analyzedTextController
+                                      .changeDirectCallback(analyzedText);
+                                },
+                              ),
+                            ),
+                          ),
                           Expanded(
                             flex: 1,
-                            child: Row(children: [
-                              Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
                                   flex: 5,
                                   child: Container(
                                     alignment: Alignment.bottomLeft,
@@ -132,8 +135,9 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                                       ),
                                       icon: const Icon(Icons.upload, size: 50),
                                     ),
-                                  )),
-                              Expanded(
+                                  ),
+                                ),
+                                Expanded(
                                   flex: 5,
                                   child: Container(
                                     alignment: Alignment.bottomRight,
@@ -153,17 +157,21 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                                       icon: const Icon(Icons.arrow_downward,
                                           size: 50),
                                     ),
-                                  )),
-                            ]),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )),
-              ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
     );
   }
 }

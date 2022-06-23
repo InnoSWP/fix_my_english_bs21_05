@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../utils/analysis_data.dart';
 
@@ -37,6 +40,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
   //Future of AnalysisData
   late Future<AnalyzedText> analysis;
   late AnalyzedTextController controller;
+  late ValueNotifier<String> descriptionListener;
 
   void _updateByFutureText(Future<AnalyzedText> newAnalysis) {
     newAnalysis.then((value) => {controller.currentAnalysis = value});
@@ -64,6 +68,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
     controller.changeFutureCallback = _updateByFutureText;
     controller.changeDirectCallback = _updateByDirectText;
     analysis.then((value) => {controller.currentAnalysis = value});
+    descriptionListener =
+        ValueNotifier<String>('Hover highlighted sentence for information.');
   }
 
   @override
@@ -99,28 +105,32 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
               ),
             );
           }
-          //String letters =
-          //  'zxcvbnmasdfghjklqwertyuiopZXCVBNMASDFGHJKLQWERTYUIOP';
           List<TextSpan> text = [];
           List<bool> used = [];
           List<String> descriptions = [];
-          for (int i = 0; i < snapshot.data!.rawText.length; i++) {
+          String initialText = snapshot.data!.rawText;
+          for (int i = 0; i < initialText.length; i++) {
             used.add(false);
             descriptions.add('');
           }
           for (var s in snapshot.data!.analyzedSentences) {
+            String sentence = s.sentence;
+
             String match = s.match.compareTo('') == 0 ? s.sentence : s.match;
-            for (int i = 0; i < used.length - match.length; i++) {
-              if (snapshot.data!.rawText
-                          .substring(i, i + match.length)
+            for (int i = 0; i < used.length - sentence.length; i++) {
+              if (initialText
+                      .substring(i, i + sentence.length)
+                      .compareTo(sentence) ==
+                  0) {
+                for (int j = i; j < i + sentence.length; j++) {
+                  if (initialText
+                          .substring(j, j + match.length)
                           .compareTo(match) ==
-                      0 /*&&
-                  (!letters
-                          .contains(snapshot.data!.rawText[i + match.length]) ||
-                      !letters.contains(snapshot.data!.rawText[i - 1]))*/
-                  ) {
-                used.fillRange(i, i + match.length, true);
-                descriptions.fillRange(i, i + match.length, s.description);
+                      0) {
+                    used.fillRange(j, j + match.length, true);
+                    descriptions.fillRange(j, j + match.length, s.description);
+                  }
+                }
               }
             }
           }
@@ -131,24 +141,14 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   text: snapshot.data!.rawText[i],
                   style: const TextStyle(
                     backgroundColor: Color(0xffeed912),
-                    //0xffeed912
                     color: Colors.black,
                     fontSize: 20,
                     fontFamily: 'Merriweather',
-                    //fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    //fontStyle: FontStyle.italic,
                   ),
                   onEnter: (event) {
-                    // debugPrint(descriptions[i]);
-                    Navigator.push(
-                      context,
-                      DialogRoute(
-                        context: context,
-                        builder: (context) {
-                          return SimpleDialog(title: Text(descriptions[i]));
-                        },
-                      ),
-                    );
+                    descriptionListener.value = descriptions[i];
                   },
                 ),
               );
@@ -165,19 +165,122 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
               );
             }
           }
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: SingleChildScrollView(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                padding: const EdgeInsets.all(12),
-                color: const Color(0xFFFBFDF7),
-                child: RichText(
-                  text: TextSpan(children: text),
+          return Column(
+            children: [
+              Expanded(
+                flex: 10,
+                //child: ClipRRect(
+                //  borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  //margin: const EdgeInsets.all(7),
+                  padding: const EdgeInsets.all(12),
+                  //0xFFFBFDF7
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFFBFDF7),
+                    border: Border.all(
+                      color: const Color(0xFF864921),
+                      width: 2,
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: RichText(
+                      text: TextSpan(children: text),
+                    ),
+                  ),
+                  // ),
                 ),
               ),
-            ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      //child: ClipRRect(
+                      //   borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        padding: const EdgeInsets.all(19),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color(0xFFFBFDF7),
+                          border: Border.all(
+                            color: const Color(0xFF864921),
+                            width: 2,
+                          ),
+                        ),
+                        child: ValueListenableBuilder<String>(
+                          valueListenable: descriptionListener,
+                          builder: (context, value, child) {
+                            return Text(
+                              value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                fontFamily: 'Merriweather',
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Hover highlighted sentence',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Merriweather',
+                            ),
+                          ),
+                        ),
+                        // ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      //child: ClipRRect(
+                      //  borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                          height: MediaQuery.of(context).size.height * 0.07,
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(left: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xFFFBFDF7),
+                            border: Border.all(
+                              color: const Color(0xFF864921),
+                              width: 2,
+                            ),
+                          ),
+                          child: Tooltip(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFFBFDF7),
+                            ),
+                            message: 'Number of mistakes',
+                            textStyle: const TextStyle(
+                              fontSize: 19,
+                              color: Color(0xFF864921),
+                              fontFamily: 'Merriweather',
+                            ),
+                            child: Text(
+                              snapshot.data!.analyzedSentences.length
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color(0xFF864921),
+                                fontSize: 35,
+                                fontFamily: 'Merriweather',
+                              ),
+                            ),
+                          )
+                          // ),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           );
         } else {
           //If text is not recieved yet, show progress indicator
