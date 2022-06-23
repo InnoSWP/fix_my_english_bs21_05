@@ -4,6 +4,7 @@ import 'package:swp/widgets/logo_widget.dart';
 import '../utils/analysis_data.dart';
 import '../utils/api_interactions.dart';
 import '../utils/moofiy_color.dart';
+import 'package:file_picker/file_picker.dart';
 
 ///Starting page widget with upload button, text field, and logo
 class StartPageWidget extends StatelessWidget {
@@ -54,7 +55,7 @@ class StartPageWidget extends StatelessWidget {
                     minLines: null,
                     controller: textEditingController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color:
@@ -94,7 +95,16 @@ class StartPageWidget extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.08,
                     child: ElevatedButton.icon(
                         onPressed: () async {
-                          onFileUploaded(await sendFilesToIExtract(), "files");
+                          //Pick pdf files from device
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  allowMultiple: true,
+                                  type: FileType.custom,
+                                  allowedExtensions: ['pdf']);
+                          if (result != null) {
+                            onFileUploaded(
+                                await sendFilesToIExtract(result), "files");
+                          }
                         },
                         icon: const Icon(
                           Icons.picture_as_pdf_sharp,
@@ -126,7 +136,7 @@ class BeautifulDelimiter extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.05,
               )),
         ),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.06,
           child: const Center(
               child: Text(

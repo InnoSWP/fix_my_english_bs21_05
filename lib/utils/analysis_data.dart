@@ -58,6 +58,7 @@ class AnalyzedSentence {
   }
 }
 
+///  Contain dat from API with report about mistakes
 class AnalyzedText {
   final String? filename;
   final String rawText;
@@ -66,14 +67,18 @@ class AnalyzedText {
   AnalyzedText(
       {required this.rawText, required this.analyzedSentences, this.filename});
 
-  void saveAsCSV() {
-    String fileContent = "1;Match;Sentence;Label;Description\n";
+  String convertToCSV() {
+    String fileContent = '"1";"Match";"Sentence";"Label";"Description"';
     int i = 2;
     for (AnalyzedSentence sentence in analyzedSentences) {
       fileContent +=
-          "$i;${sentence.match};${sentence.sentence};${sentence.label};${sentence.description}\n";
+          '\n"$i";"${sentence.match}";"${sentence.sentence.replaceAll("\n", " ")}";"${sentence.label}";"${sentence.description}"';
       i++;
     }
-    downloadFile(fileContent, "report.csv");
+    return fileContent;
+  }
+
+  void saveAsCSV() {
+    downloadFile(convertToCSV(), "report.csv");
   }
 }

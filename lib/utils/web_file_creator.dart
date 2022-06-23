@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:html' as html;

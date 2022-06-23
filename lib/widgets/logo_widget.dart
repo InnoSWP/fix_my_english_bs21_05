@@ -8,7 +8,7 @@ class IExtractLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-        text: TextSpan(
+        text: const TextSpan(
             text: 'Fix My English',
             style: TextStyle(
                 color: MoofiyColors.colorPrimaryRedCaramel,
