@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../utils/analysis_data.dart';
@@ -124,7 +125,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   0) {
                 for (int j = i; j < i + sentence.length; j++) {
                   if (initialText
-                          .substring(j, j + match.length)
+                          .substring(
+                              j, min(j + match.length, initialText.length))
                           .compareTo(match) ==
                       0) {
                     used.fillRange(j, j + match.length, true);

@@ -30,6 +30,7 @@ class FileListWidget extends StatefulWidget {
 
 class _FileListWidget extends State<FileListWidget> {
   late List<AnalyzedText?> analyzedTexts;
+  AnalyzedText? selected;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _FileListWidget extends State<FileListWidget> {
     widget.controller.allAnalyzes = analyzedTexts;
     for (var req in widget.sequentialRequests) {
       req.then((value) {
+        selected ??= value;
         int nullIndex = analyzedTexts.indexOf(null);
         analyzedTexts.insert(nullIndex, value);
         analyzedTexts.remove(null);
@@ -64,6 +66,9 @@ class _FileListWidget extends State<FileListWidget> {
 
   void _removeFile(AnalyzedText textToRemove) {
     analyzedTexts.remove(textToRemove);
+    if (selected == textToRemove && analyzedTexts.isNotEmpty) {
+      selected = analyzedTexts.first;
+    }
     setState(() {});
   }
 
@@ -76,50 +81,94 @@ class _FileListWidget extends State<FileListWidget> {
         height: double.infinity,
         padding: const EdgeInsets.all(12),
         color: const Color(0xFFFBFDF7),
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            if (analyzedTexts[index] == null) {
-              return const ListTile(
-                leading: CircularProgressIndicator(),
-                title: Text(
-                  "Loading...",
-                  style: TextStyle(fontSize: 18, fontFamily: "Merriweather"),
-                ),
-              );
-            } else {
-              return Card(
-                  color: MoofiyColors.colorSecondaryLightGreenPlant,
-                  child: InkWell(
-                    onTap: () {
-                      widget.onSelected(analyzedTexts[index]!);
-                    },
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.picture_as_pdf,
-                        size: 30,
-                        color: MoofiyColors.colorSecondaryGreenPlant,
+        child: analyzedTexts.isEmpty
+            ? Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          flex: 5,
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: const Icon(
+                              Icons.upload_file,
+                              size: 60,
+                              color: MoofiyColors.colorTextSmoothBlack,
+                            ),
+                          )),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                            alignment: Alignment.topCenter,
+                            child: const Text(
+                              "Upload files to view analyses.",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: "Merriweather",
+                                  color: MoofiyColors.colorTextSmoothBlack),
+                            )),
                       ),
-                      trailing: IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          size: 30,
-                          color: MoofiyColors.colorSecondaryGreenPlant,
-                        ),
-                        onPressed: () {
-                          _removeFile(analyzedTexts[index]!);
-                        },
-                      ),
+                    ]),
+              )
+            : ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  if (analyzedTexts[index] == null) {
+                    return const ListTile(
+                      leading: CircularProgressIndicator(),
                       title: Text(
-                        analyzedTexts[index]!.filename!,
-                        style: const TextStyle(
-                            fontSize: 18, fontFamily: "Merriweather"),
+                        "Loading...",
+                        style:
+                            TextStyle(fontSize: 18, fontFamily: "Merriweather"),
                       ),
-                    ),
-                  ));
-            }
-          },
-          itemCount: analyzedTexts.length,
-        ),
+                    );
+                  } else {
+                    return Card(
+                        color: (analyzedTexts[index] == selected)
+                            ? const Color.fromARGB(255, 205, 231, 201)
+                            : MoofiyColors.colorSecondaryLightGreenPlant,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selected = analyzedTexts[index];
+                            });
+                            widget.onSelected(analyzedTexts[index]!);
+                          },
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.picture_as_pdf,
+                              size: 30,
+                              color: (analyzedTexts[index] == selected)
+                                  ? const Color.fromARGB(255, 23, 54, 35)
+                                  : MoofiyColors.colorSecondaryGreenPlant,
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 30,
+                                color: (analyzedTexts[index] == selected)
+                                    ? const Color.fromARGB(255, 23, 54, 35)
+                                    : MoofiyColors.colorSecondaryGreenPlant,
+                              ),
+                              onPressed: () {
+                                _removeFile(analyzedTexts[index]!);
+                              },
+                            ),
+                            title: Text(
+                              analyzedTexts[index]!.filename!,
+                              style: TextStyle(
+                                  color: (analyzedTexts[index] == selected)
+                                      ? const Color.fromARGB(255, 23, 54, 35)
+                                      : MoofiyColors.colorSecondaryGreenPlant,
+                                  fontSize: 18,
+                                  fontFamily: "Merriweather"),
+                            ),
+                          ),
+                        ));
+                  }
+                },
+                itemCount: analyzedTexts.length,
+              ),
       ),
     );
   }
