@@ -84,6 +84,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
             return ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: SingleChildScrollView(
+                controller: ScrollController(),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
@@ -184,6 +185,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     ),
                   ),
                   child: SingleChildScrollView(
+                    controller: ScrollController(),
                     child: RichText(
                       text: TextSpan(children: text),
                     ),
