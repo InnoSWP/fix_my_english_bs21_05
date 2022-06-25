@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:swp/utils/text_highlighter.dart';
 import '../utils/analysis_data.dart';
 
 class AnalyzedTextController {
@@ -107,37 +108,10 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
             );
           }
           List<TextSpan> text = [];
-          List<bool> used = [];
-          List<String> descriptions = [];
-          String initialText = snapshot.data!.rawText;
-          for (int i = 0; i < initialText.length; i++) {
-            used.add(false);
-            descriptions.add('');
-          }
-          for (var s in snapshot.data!.analyzedSentences) {
-            String sentence = s.sentence;
-
-            String match = s.match.compareTo('') == 0 ? s.sentence : s.match;
-            for (int i = 0; i < used.length - sentence.length; i++) {
-              if (initialText
-                      .substring(i, i + sentence.length)
-                      .compareTo(sentence) ==
-                  0) {
-                for (int j = i; j < i + sentence.length; j++) {
-                  if (initialText
-                          .substring(
-                              j, min(j + match.length, initialText.length))
-                          .compareTo(match) ==
-                      0) {
-                    used.fillRange(j, j + match.length, true);
-                    descriptions.fillRange(j, j + match.length, s.description);
-                  }
-                }
-              }
-            }
-          }
-          for (int i = 0; i < used.length; i++) {
-            if (used[i]) {
+          List<HighlighCharacter> highlightMap =
+              getHighlightMap(snapshot.data!);
+          for (int i = 0; i < highlightMap.length; i++) {
+            if (highlightMap[i].isHighligh) {
               text.add(
                 TextSpan(
                   text: snapshot.data!.rawText[i],
@@ -150,7 +124,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     //fontStyle: FontStyle.italic,
                   ),
                   onEnter: (event) {
-                    descriptionListener.value = descriptions[i];
+                    descriptionListener.value =
+                        highlightMap[i].analysisSentence!.description;
                   },
                 ),
               );
