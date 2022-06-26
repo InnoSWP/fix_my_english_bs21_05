@@ -55,7 +55,7 @@ class StartPageWidget extends StatelessWidget {
                     minLines: null,
                     controller: textEditingController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color:
@@ -96,13 +96,16 @@ class StartPageWidget extends StatelessWidget {
                     child: ElevatedButton.icon(
                         onPressed: () async {
                           //Pick pdf files from device
-                          FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              allowMultiple: true, type: FileType.custom, allowedExtensions: ['pdf']);
-                          if(result!=null) {
+                          FilePickerResult? result = await FilePicker.platform
+                              .pickFiles(
+                                  allowMultiple: true,
+                                  type: FileType.custom,
+                                  allowedExtensions: ['pdf']);
+                          if (result != null) {
                             onFileUploaded(
                                 await sendFilesToIExtract(result), "files");
-                            }
-                          },
+                          }
+                        },
                         icon: const Icon(
                           Icons.picture_as_pdf_sharp,
                           size: 40,
@@ -133,7 +136,7 @@ class BeautifulDelimiter extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.05,
               )),
         ),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.06,
           child: const Center(
               child: Text(

@@ -7,7 +7,7 @@ class MoofiyColors {
   static const Color colorSurfaceSmoothGreenPlant = Color(0xFFFBFDF7);
   static const Color colorPrimaryLightRedCaramel = Color(0xFFF2EEE1);
   static const Color colorSecondaryLightGreenPlant = Color(0xFFE9F1E8);
-  static final Color colorTextSmoothBlack = Color(0xFF49454F);
+  static const Color colorTextSmoothBlack = Color(0xFF49454F);
   static final themeData = ThemeData(
     scaffoldBackgroundColor: const Color(0xFFF2EEE1),
     primaryColor: const Color(0xFF864921),

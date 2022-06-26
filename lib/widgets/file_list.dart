@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swp/utils/moofiy_color.dart';
 import '../utils/analysis_data.dart';
 
 class FileListController {
@@ -68,39 +69,58 @@ class _FileListWidget extends State<FileListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        if (analyzedTexts[index] == null) {
-          return const ListTile(
-            leading: CircularProgressIndicator(),
-            title: Text(
-              "Loading...",
-              style: TextStyle(fontSize: 18),
-            ),
-          );
-        } else {
-          return Card(
-              child: InkWell(
-            onTap: () {
-              widget.onSelected(analyzedTexts[index]!);
-            },
-            child: ListTile(
-              leading: const Icon(Icons.picture_as_pdf),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  _removeFile(analyzedTexts[index]!);
-                },
-              ),
-              title: Text(
-                analyzedTexts[index]!.filename!,
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
-          ));
-        }
-      },
-      itemCount: analyzedTexts.length,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        padding: const EdgeInsets.all(12),
+        color: const Color(0xFFFBFDF7),
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            if (analyzedTexts[index] == null) {
+              return const ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text(
+                  "Loading...",
+                  style: TextStyle(fontSize: 18, fontFamily: "Merriweather"),
+                ),
+              );
+            } else {
+              return Card(
+                  color: MoofiyColors.colorSecondaryLightGreenPlant,
+                  child: InkWell(
+                    onTap: () {
+                      widget.onSelected(analyzedTexts[index]!);
+                    },
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.picture_as_pdf,
+                        size: 30,
+                        color: MoofiyColors.colorSecondaryGreenPlant,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          size: 30,
+                          color: MoofiyColors.colorSecondaryGreenPlant,
+                        ),
+                        onPressed: () {
+                          _removeFile(analyzedTexts[index]!);
+                        },
+                      ),
+                      title: Text(
+                        analyzedTexts[index]!.filename!,
+                        style: const TextStyle(
+                            fontSize: 18, fontFamily: "Merriweather"),
+                      ),
+                    ),
+                  ));
+            }
+          },
+          itemCount: analyzedTexts.length,
+        ),
+      ),
     );
   }
 }
