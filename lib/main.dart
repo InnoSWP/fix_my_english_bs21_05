@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:swp/utils/moofiy_color.dart';
 import 'firebase_options.dart';
-import 'pages/starting_page.dart';
-import 'pages/main_page_text.dart';
-import 'pages/main_page_files.dart';
 import 'pages/root_widget.dart';
 
 void main() async {
@@ -21,7 +19,7 @@ class FixMyEnglishApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fix my English',
-      theme: themeData,
+      theme: MoofiyColors.themeData,
       home: const RootWidget(),
     );
   }

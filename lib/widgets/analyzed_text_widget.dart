@@ -137,7 +137,8 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     //fontStyle: FontStyle.italic,
                   ),
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () => sentenceListener.value = highlightMap[i].analysisSentence!,
+                    ..onTap = () => sentenceListener.value =
+                        highlightMap[i].analysisSentence!,
                 ),
               );
             } else {
@@ -226,7 +227,6 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                           icon: const Icon(
                             Icons.report,
                             size: 35,
-
                           ),
                           color: const Color(0xffbb0d0d),
                           onPressed: () {
