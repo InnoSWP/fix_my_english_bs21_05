@@ -31,6 +31,7 @@ void main() {
       child: AnalyzedTextWidget(
         analysis: future1,
         controller: controller,
+        supportSingleExport: false,
       ),
     )));
 

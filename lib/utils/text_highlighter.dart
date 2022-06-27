@@ -28,13 +28,13 @@ List<HighlighCharacter> getHighlightMap(AnalyzedText analysisData) {
       Iterable<RegExpMatch> matchesIssue =
           regExpIssue.allMatches(issueSentence);
       for (RegExpMatch matchIssue in matchesIssue) {
-        if (matchSentence.start + matchIssue.start - 1 >= 0) {
+        /*if (matchSentence.start + matchIssue.start - 1 >= 0) {
           if (letters.contains(
               initialText[matchSentence.start + matchIssue.start - 1]
                   .toLowerCase())) {
             continue;
           }
-        }
+        }*/
         if (matchSentence.start + matchIssue.end < initialText.length) {
           if (letters.contains(initialText[matchSentence.start + matchIssue.end]
               .toLowerCase())) {
