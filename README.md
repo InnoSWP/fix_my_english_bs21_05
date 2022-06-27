@@ -4,7 +4,8 @@
 
 Software project(from SWP course). This application may help users check academic style correctness of English texts.
 Fix my English is a web app that can be used to analyze English academic writing style. It utilizes natural language processing techniques to analyze text and find academic writing mistakes. Then, mistakes are reported to the user with their appropriate description. The project also supports exporting reports of the mistakes in the form of CSV files. It is free and easy to use. Availability from Russia and unpaid are the main purposes for developing such applications.
-## Link to the demo
+
+## Demo
 [Link](https://fix-my-english-43ee2.web.app/)
 
 ## How to use
