@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:swp/utils/moofiy_color.dart';
 import 'package:swp/utils/text_highlighter.dart';
 import '../utils/analysis_data.dart';
 
@@ -83,9 +84,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
           //debugPrint(snapshot.data!.analyzedSentences.toString());
           if (snapshot.data!.analyzedSentences.isEmpty) {
             return ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SingleChildScrollView(
-                controller: ScrollController(),
+                borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
@@ -93,18 +92,30 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   color: const Color(0xECFBFDF7),
                   child: Container(
                     alignment: Alignment.center,
-                    child: const Text(
-                      'Wow, man! Your text does not have mistakes. Respect!',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 35,
-                        fontFamily: 'Merriweather',
-                      ),
-                    ),
+                    child: Column(children: [
+                      Expanded(
+                          flex: 5,
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: const Icon(
+                              Icons.task_alt,
+                              size: 70,
+                              color: MoofiyColors.colorTextSmoothBlack,
+                            ),
+                          )),
+                      const Expanded(
+                          flex: 5,
+                          child: Text(
+                            'No issues found!',
+                            style: TextStyle(
+                              color: MoofiyColors.colorTextSmoothBlack,
+                              fontSize: 25,
+                              fontFamily: 'Merriweather',
+                            ),
+                          ))
+                    ]),
                   ),
-                ),
-              ),
-            );
+                ));
           }
           List<TextSpan> text = [];
           List<HighlighCharacter> highlightMap =
