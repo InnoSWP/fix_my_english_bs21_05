@@ -79,19 +79,23 @@ class AnalyzedText {
   }
 
   void saveAsCSV() {
-    downloadFile(convertToCSV(), "report.csv");
+    if (filename == null) {
+      downloadFile(convertToCSV(), "report.csv");
+    } else {
+      downloadFile(convertToCSV(), filename!.replaceAll(".pdf", ".csv"));
+    }
   }
 }
 
 /// Add AnalyzedSentence instance to the DataBase
-void addMistakeToFirestore(Map<String, dynamic> data){
+void addMistakeToFirestore(Map<String, dynamic> data) {
   var db = FirebaseFirestore.instance;
   db.collection('reports').add(data);
   //sendListToAPI();
 }
 
 /// Send list of false-positive mistakes to the API
-void sendListToAPI(){
+void sendListToAPI() {
   // var db = FirebaseFirestore.instance;
   // db.collection('reports').get().then((value) {
   //   value.docs.cast()
