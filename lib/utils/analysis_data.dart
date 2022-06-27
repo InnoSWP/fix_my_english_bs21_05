@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swp/utils/web_file_creator.dart';
 
 List<AnalyzedSentence> analyzedSentenceFromJson(String str) =>
@@ -81,4 +81,19 @@ class AnalyzedText {
   void saveAsCSV() {
     downloadFile(convertToCSV(), "report.csv");
   }
+}
+
+/// Add AnalyzedSentence instance to the DataBase
+void addMistakeToFirestore(Map<String, dynamic> data){
+  var db = FirebaseFirestore.instance;
+  db.collection('reports').add(data);
+  //sendListToAPI();
+}
+
+/// Send list of false-positive mistakes to the API
+void sendListToAPI(){
+  // var db = FirebaseFirestore.instance;
+  // db.collection('reports').get().then((value) {
+  //   value.docs.cast()
+  // });
 }
