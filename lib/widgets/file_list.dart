@@ -142,18 +142,33 @@ class _FileListWidget extends State<FileListWidget> {
                                   ? const Color.fromARGB(255, 23, 54, 35)
                                   : MoofiyColors.colorSecondaryGreenPlant,
                             ),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                size: 30,
-                                color: (analyzedTexts[index] == selected)
-                                    ? const Color.fromARGB(255, 23, 54, 35)
-                                    : MoofiyColors.colorSecondaryGreenPlant,
+                            trailing:
+                                Row(mainAxisSize: MainAxisSize.min, children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.download,
+                                  size: 30,
+                                  color: (analyzedTexts[index] == selected)
+                                      ? const Color.fromARGB(255, 23, 54, 35)
+                                      : MoofiyColors.colorSecondaryGreenPlant,
+                                ),
+                                onPressed: () {
+                                  analyzedTexts[index]!.saveAsCSV();
+                                },
                               ),
-                              onPressed: () {
-                                _removeFile(analyzedTexts[index]!);
-                              },
-                            ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  size: 30,
+                                  color: (analyzedTexts[index] == selected)
+                                      ? const Color.fromARGB(255, 23, 54, 35)
+                                      : MoofiyColors.colorSecondaryGreenPlant,
+                                ),
+                                onPressed: () {
+                                  _removeFile(analyzedTexts[index]!);
+                                },
+                              ),
+                            ]),
                             title: Text(
                               analyzedTexts[index]!.filename!,
                               style: TextStyle(

@@ -32,7 +32,7 @@ List<HighlighCharacter> getHighlightMap(AnalyzedText analysisData) {
           if (letters.contains(
               initialText[matchSentence.start + matchIssue.start - 1]
                   .toLowerCase())) {
-            //continue;
+            continue;
           }
         }
         if (matchSentence.start + matchIssue.end < initialText.length) {
