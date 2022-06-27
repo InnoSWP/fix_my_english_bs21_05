@@ -34,21 +34,22 @@ Future<AnalyzedText> sendToIExtract(String text, [String? filename]) async {
       analyzedSentences: analyzedSentenceFromJson(response.body));
 }
 
-Future<List<Future<AnalyzedText>>> sendFilesToIExtract(FilePickerResult result) async {
+Future<List<Future<AnalyzedText>>> sendFilesToIExtract(
+    FilePickerResult result) async {
   List<Future<AnalyzedText>> sequentialFutures = [];
 
-    //If user picked something, then extract text and send to IExtract API, then call callback
-    Future<AnalyzedText> prevText = sendToIExtract(
-        PDFToRawTextConverter(result.files[0].bytes!).result,
-        result.files[0].name);
-    sequentialFutures.add(prevText);
-    for (int i = 1; i < result.files.length; i++) {
-      sequentialFutures.add(connectFuture(
-          prevText,
-          PDFToRawTextConverter(result.files[i].bytes!).result,
-          result.files[i].name));
-    }
-    return sequentialFutures;
+  //If user picked something, then extract text and send to IExtract API, then call callback
+  Future<AnalyzedText> prevText = sendToIExtract(
+      await PDFToRawTextConverter(result.files[0].bytes!).convertToText(),
+      result.files[0].name);
+  sequentialFutures.add(prevText);
+  for (int i = 1; i < result.files.length; i++) {
+    sequentialFutures.add(connectFuture(
+        prevText,
+        await PDFToRawTextConverter(result.files[i].bytes!).convertToText(),
+        result.files[i].name));
+  }
+  return sequentialFutures;
 }
 
 Future<AnalyzedText> connectFuture(
