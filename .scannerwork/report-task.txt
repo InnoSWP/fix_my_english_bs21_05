@@ -2,5 +2,5 @@ projectKey=Fix-my-English
 serverUrl=http://localhost:9000
 serverVersion=9.5.0.56709
 dashboardUrl=http://localhost:9000/dashboard?id=Fix-my-English
-ceTaskId=AYGLc7EXzvdy5GsWHJSB
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYGLc7EXzvdy5GsWHJSB
+ceTaskId=AYGRImzegLT1ZCgx4uQu
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYGRImzegLT1ZCgx4uQu

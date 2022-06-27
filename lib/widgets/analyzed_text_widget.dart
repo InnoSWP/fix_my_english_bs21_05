@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:swp/utils/moofiy_color.dart';
+import 'package:swp/utils/text_highlighter.dart';
 import '../utils/analysis_data.dart';
 
 class AnalyzedTextController {
@@ -84,8 +86,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
           //If future receive text, show it
           if (snapshot.data!.analyzedSentences.isEmpty) {
             return ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SingleChildScrollView(
+                borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
@@ -93,51 +94,36 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   color: const Color(0xECFBFDF7),
                   child: Container(
                     alignment: Alignment.center,
-                    child: const Text(
-                      'Wow, man! Your text does not have mistakes. Respect!',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 35,
-                        fontFamily: 'Merriweather',
-                      ),
-                    ),
+                    child: Column(children: [
+                      Expanded(
+                          flex: 5,
+                          child: Container(
+                            alignment: Alignment.bottomCenter,
+                            child: const Icon(
+                              Icons.task_alt,
+                              size: 70,
+                              color: MoofiyColors.colorTextSmoothBlack,
+                            ),
+                          )),
+                      const Expanded(
+                          flex: 5,
+                          child: Text(
+                            'No issues found!',
+                            style: TextStyle(
+                              color: MoofiyColors.colorTextSmoothBlack,
+                              fontSize: 25,
+                              fontFamily: 'Merriweather',
+                            ),
+                          ))
+                    ]),
                   ),
-                ),
-              ),
-            );
+                ));
           }
           List<TextSpan> text = [];
-          List<bool> used = [];
-          List<AnalyzedSentence> sentences = [];
-          String initialText = snapshot.data!.rawText;
-          for (int i = 0; i < initialText.length; i++) {
-            used.add(false);
-            sentences.add(AnalyzedSentence(
-                match: '', sentence: '', label: '', description: ''));
-          }
-          for (var s in snapshot.data!.analyzedSentences) {
-            String sentence = s.sentence;
-
-            String match = s.match.compareTo('') == 0 ? s.sentence : s.match;
-            for (int i = 0; i < used.length - sentence.length; i++) {
-              if (initialText
-                      .substring(i, i + sentence.length)
-                      .compareTo(sentence) ==
-                  0) {
-                for (int j = i; j < i + sentence.length; j++) {
-                  if (initialText
-                          .substring(j, j + match.length)
-                          .compareTo(match) ==
-                      0) {
-                    used.fillRange(j, j + match.length, true);
-                    sentences.fillRange(j, j + match.length, s);
-                  }
-                }
-              }
-            }
-          }
-          for (int i = 0; i < used.length; i++) {
-            if (used[i]) {
+          List<HighlighCharacter> highlightMap =
+              getHighlightMap(snapshot.data!);
+          for (int i = 0; i < highlightMap.length; i++) {
+            if (highlightMap[i].isHighligh) {
               text.add(
                 TextSpan(
                   text: snapshot.data!.rawText[i],
@@ -151,7 +137,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     //fontStyle: FontStyle.italic,
                   ),
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () => sentenceListener.value = sentences[i],
+                    ..onTap = () => sentenceListener.value = highlightMap[i].analysisSentence!,
                 ),
               );
             } else {
@@ -187,6 +173,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     ),
                   ),
                   child: SingleChildScrollView(
+                    controller: ScrollController(),
                     child: RichText(
                       text: TextSpan(
                           children: text, style: const TextStyle(height: 1.7)),
@@ -239,6 +226,7 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                           icon: const Icon(
                             Icons.report,
                             size: 35,
+
                           ),
                           color: const Color(0xffbb0d0d),
                           onPressed: () {

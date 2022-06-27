@@ -4,15 +4,16 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 ///Usage: PDFToRawTextConverter(bytes).result -> returns String
 class PDFToRawTextConverter {
   final List<int> bytes;
-  late final String result;
 
   ///Constructs PDF to text converter. Requires pdf data in byte format [bytes].
   ///Text can be extracted by
   ///
   ///```dart
-  ///String text = PDFToRawTextConverter(bytes).result;
+  ///String text = PDFToRawTextConverter(bytes).convertToText();
   ///```
-  PDFToRawTextConverter(this.bytes) {
+  PDFToRawTextConverter(this.bytes);
+
+  Future<String> convertToText() async {
     //Load the PDF document by bytes
     PdfDocument document = PdfDocument(inputBytes: bytes);
 
@@ -20,8 +21,10 @@ class PDFToRawTextConverter {
     PdfTextExtractor extractor = PdfTextExtractor(document);
 
     //Extract all the text from the document.
-    result = extractor.extractText().replaceAll("\n", "");
+    String result = extractor.extractText().replaceAll("\n", "");
     //Dispose document
     document.dispose();
+
+    return result;
   }
 }

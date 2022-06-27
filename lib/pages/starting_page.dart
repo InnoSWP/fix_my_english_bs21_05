@@ -94,18 +94,8 @@ class StartPageWidget extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.24,
                     height: MediaQuery.of(context).size.height * 0.08,
                     child: ElevatedButton.icon(
-                        onPressed: () async {
-                          //Pick pdf files from device
-                          FilePickerResult? result = await FilePicker.platform
-                              .pickFiles(
-                                  allowMultiple: true,
-                                  type: FileType.custom,
-                                  allowedExtensions: ['pdf']);
-                          if (result != null) {
-                            onFileUploaded(
-                                await sendFilesToIExtract(result), "files");
-                          }
-                        },
+                        onPressed: () =>
+                            transferFilesToNextPage(onFileUploaded, context),
                         icon: const Icon(
                           Icons.picture_as_pdf_sharp,
                           size: 40,
@@ -154,5 +144,47 @@ class BeautifulDelimiter extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+void transferFilesToNextPage(
+    Function(List<Future<AnalyzedText>>, String) onFileUploaded,
+    BuildContext context) async {
+  //Pick pdf files from device
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true, type: FileType.custom, allowedExtensions: ['pdf']);
+
+  if (result != null) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(mainAxisSize: MainAxisSize.min, children: const [
+              SizedBox(
+                  child: Icon(
+                Icons.access_alarm,
+                size: 35,
+                color: MoofiyColors.colorSecondaryGreenPlant,
+              )),
+              SizedBox(
+                  child: Text("Processing your files...",
+                      style: TextStyle(
+                        color: MoofiyColors.colorSecondaryGreenPlant,
+                        fontSize: 20,
+                        fontFamily: 'Merriweather',
+                      ))),
+            ]),
+          ),
+        );
+      },
+    );
+    await Future.delayed(const Duration(seconds: 1));
+    var processedfiles = await sendFilesToIExtract(result);
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
+    onFileUploaded(processedfiles, "files");
   }
 }

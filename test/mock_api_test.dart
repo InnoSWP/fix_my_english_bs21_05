@@ -4,8 +4,8 @@ import 'package:swp/utils/api_interactions.dart';
 
 void main() {
   test("Test if API (Mock or Real) is working.", () async {
-    AnalyzedText text = await sendToIExtract("Bla bla bla", "test");
-    expect(text.rawText, "Bla bla bla");
+    AnalyzedText text = await sendToIExtract("There are very problem", "test");
+    expect(text.rawText, "There are very problem");
     expect(text.filename, "test");
     expect(text.analyzedSentences.length, greaterThan(0));
   });

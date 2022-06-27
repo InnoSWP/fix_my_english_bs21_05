@@ -43,12 +43,12 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_sharp,
               color: MoofiyColors.colorPrimaryRedCaramel,
-              size: 40,
+              size: 34,
             ),
             onPressed: () {
               widget.analysisRequests.clear();
@@ -57,7 +57,7 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
           ),
           title: const Text(
             'Fix My English',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 37),
           )),
       body: SafeArea(
         child: Stack(
