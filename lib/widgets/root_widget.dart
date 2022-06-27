@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main_page_files.dart';
-import 'starting_page.dart';
-import 'main_page_text.dart';
+import '../pages/main_page_files.dart';
+import '../pages/starting_page.dart';
+import '../pages/main_page_text.dart';
 
 ///The root widget to display appropriate page widget depending on current page.
 class RootWidget extends StatefulWidget {
