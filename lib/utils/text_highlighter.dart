@@ -1,5 +1,4 @@
 import 'package:swp/utils/analysis_data.dart';
-import 'dart:math';
 
 class HighlighCharacter {
   final bool isHighligh;
