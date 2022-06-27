@@ -8,6 +8,8 @@ class HighlighCharacter {
 }
 
 List<HighlighCharacter> getHighlightMap(AnalyzedText analysisData) {
+  String letters = "qwertyuiopasdfghjklzxcvbnm";
+
   List<HighlighCharacter> highlighCharacters = [];
   String initialText = analysisData.rawText;
   for (int i = 0; i < initialText.length; i++) {
@@ -16,7 +18,7 @@ List<HighlighCharacter> getHighlightMap(AnalyzedText analysisData) {
 
   for (var s in analysisData.analyzedSentences) {
     String realMatch = s.match.compareTo('') == 0 ? s.sentence : s.match;
-    RegExp regExpSentence = RegExp(RegExp.escape(realMatch));
+    RegExp regExpSentence = RegExp(RegExp.escape(s.sentence));
     Iterable<RegExpMatch> matchesSentence =
         regExpSentence.allMatches(initialText);
     for (RegExpMatch matchSentence in matchesSentence) {
@@ -26,6 +28,19 @@ List<HighlighCharacter> getHighlightMap(AnalyzedText analysisData) {
       Iterable<RegExpMatch> matchesIssue =
           regExpIssue.allMatches(issueSentence);
       for (RegExpMatch matchIssue in matchesIssue) {
+        if (matchSentence.start + matchIssue.start - 1 >= 0) {
+          if (letters.contains(
+              initialText[matchSentence.start + matchIssue.start - 1]
+                  .toLowerCase())) {
+            //continue;
+          }
+        }
+        if (matchSentence.start + matchIssue.end < initialText.length) {
+          if (letters.contains(initialText[matchSentence.start + matchIssue.end]
+              .toLowerCase())) {
+            continue;
+          }
+        }
         highlighCharacters.fillRange(matchSentence.start + matchIssue.start,
             matchSentence.start + matchIssue.end, HighlighCharacter(true, s));
       }
