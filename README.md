@@ -34,6 +34,8 @@ There are two main ways to use our project. Users can upload multiple pdf files 
 
 ## Badges
 
+[![License](https://poser.pugx.org/ali-irawan/xtra/license.svg)](https://poser.pugx.org/ali-irawan/xtra/license.svg)
+
 ## Liseince
 
 MIT License
