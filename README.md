@@ -9,6 +9,7 @@ Fix my English is a web app that can be used to analyze English academic writing
 [Link](https://fix-my-english-43ee2.web.app/)
 
 ## How to use
+First of all go to this [website](https://fix-my-english-43ee2.web.app/).
 There are two main ways to use our project. Users can upload multiple pdf files to analyze writing in it. Users also can copy and paste the text into the text field. After that, the app should return the reports and show them to the user highlighting the mistakes. If the user wants to download the reports there is a button for that.
 
 
@@ -24,7 +25,17 @@ There are two main ways to use our project. Users can upload multiple pdf files 
 
 - Install [Flutter](https://docs.flutter.dev/get-started/install)
 - Download our project from GutHub
-- Write *flutter pub get* and *flutter build web* using CMD in the folder with project
+```console
+git clone https://github.com/InnoSWP/fix_my_english_bs21_05
+```
+- Get dependecies
+```console
+flutter pub get
+```
+- If you want build web release, type following command
+```console
+flutter build web
+```
 
 ## Frameworks or technology
 
