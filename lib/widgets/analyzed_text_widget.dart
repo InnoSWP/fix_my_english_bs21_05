@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:swp/utils/moofiy_color.dart';
@@ -217,72 +218,131 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                     controller: ScrollController(),
                     child: RichText(
                       text: TextSpan(
-                          children: text, style: const TextStyle(height: 1.7)),
+                          children: text, style: const TextStyle(height: 1.75)),
                     ),
                   ),
                   // ),
                 ),
               ),
               Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    //height: MediaQuery.of(context).size.height * 0.07,
-                    //padding: const EdgeInsets.all(19),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color(0xFFFBFDF7),
-                      border: Border.all(
-                        color: const Color(0xFF864921),
-                        width: 2,
+                flex: 1,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  //height: MediaQuery.of(context).size.height * 0.07,
+                  //padding: const EdgeInsets.all(19),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFFBFDF7),
+                    border: Border.all(
+                      color: const Color(0xFF864921),
+                      width: 2,
+                    ),
+                  ),
+                  child: Stack(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: ValueListenableBuilder<AnalyzedSentence>(
+                          valueListenable: sentenceListener,
+                          builder: (context, value, child) {
+                            return Text(
+                              '${value.label}\n${value.description}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                fontFamily: 'Merriweather',
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    child: Stack(
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: ValueListenableBuilder<AnalyzedSentence>(
-                            valueListenable: sentenceListener,
-                            builder: (context, value, child) {
-                              return Text(
-                                '${value.label}\n${value.description}',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  fontFamily: 'Merriweather',
-                                ),
-                              );
-                            },
+                      Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.only(right: 5, bottom: 15),
+                        child: IconButton(
+                          alignment: Alignment.topRight,
+                          tooltip: 'Report about wrong mistake',
+                          icon: const Icon(
+                            Icons.report,
+                            size: 35,
                           ),
+                          color: const Color(0xffbb0d0d),
+                          onPressed: () {
+                            if (sentenceListener.value.sentence.compareTo('') ==
+                                0) {
+                              return;
+                            }
+                            TextEditingController reason =
+                                TextEditingController();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Report about mistake"),
+                                    titleTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 25,
+                                      fontFamily: 'Merriweather',
+                                    ),
+                                    actionsOverflowButtonSpacing: 20,
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (reason.value.text.isEmpty) {
+                                            return;
+                                          }
+                                          final Map<String, dynamic> data =
+                                              sentenceListener.value.toJson();
+                                          data['reason'] = reason.value.text;
+                                          addMistakeToFirestore(data);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Send"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Back"),
+                                      ),
+                                    ],
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      child: TextField(
+                                        controller: reason,
+                                        textAlignVertical:
+                                            TextAlignVertical.top,
+                                        expands: true,
+                                        minLines: null,
+                                        maxLines: null,
+                                        decoration: const InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: MoofiyColors
+                                                        .colorPrimaryRedCaramelDark)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: MoofiyColors
+                                                        .colorPrimaryRedCaramelDark)),
+                                            hintText: "Write the reason..."),
+                                      ),
+                                    ),
+                                  );
+                                });
+                          },
                         ),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          margin: const EdgeInsets.only(right: 5, bottom: 15),
-                          child: IconButton(
-                            alignment: Alignment.topRight,
-                            tooltip: 'Report about wrong mistake',
-                            icon: const Icon(
-                              Icons.report,
-                              size: 35,
-                            ),
-                            color: const Color(0xffbb0d0d),
-                            onPressed: () {
-                              if (sentenceListener.value.sentence
-                                      .compareTo('') ==
-                                  0) {
-                                return;
-                              }
-                              addMistakeToFirestore(
-                                  sentenceListener.value.toJson());
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           );
         } else {

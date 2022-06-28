@@ -120,9 +120,6 @@ class _MainPageWidget extends State<MainPageWidget> {
                                           fontFamily: 'Merriweather',
                                         ),
                                         decoration: InputDecoration(
-                                          labelStyle: const TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           focusedBorder: UnderlineInputBorder(
                                             borderRadius:
                                                 const BorderRadius.all(
@@ -142,8 +139,8 @@ class _MainPageWidget extends State<MainPageWidget> {
                                                 style: BorderStyle.solid),
                                           ),
                                           border: const OutlineInputBorder(),
-                                          label: const Text(
-                                              'Your text for analyzing'),
+                                          hintText:
+                                              "Enter the text for analysis...",
                                         ),
                                         cursorColor:
                                             Theme.of(context).primaryColorDark,
