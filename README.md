@@ -31,7 +31,7 @@ git clone https://github.com/InnoSWP/fix_my_english_bs21_05
 ```console
 flutter pub get
 ```
-- If you want build web release type following command
+- If you want build web release, type following command
 ```console
 flutter build web
 ```
