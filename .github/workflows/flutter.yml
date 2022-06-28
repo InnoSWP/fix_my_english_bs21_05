@@ -37,3 +37,7 @@ jobs:
       # Run unit-tests
       - name: run tests
         run: flutter test --platform chrome
+      
+      # Build web test
+      - name: building for web
+        run: flutter build web
