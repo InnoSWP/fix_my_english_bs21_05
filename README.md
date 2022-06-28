@@ -24,7 +24,17 @@ There are two main ways to use our project. Users can upload multiple pdf files 
 
 - Install [Flutter](https://docs.flutter.dev/get-started/install)
 - Download our project from GutHub
-- Write *flutter pub get* and *flutter build web* using CMD in the folder with project
+```console
+git clone https://github.com/InnoSWP/fix_my_english_bs21_05
+```
+- Get dependecies
+```console
+flutter pub get
+```
+- If you want build web release type following command
+```console
+flutter build web
+```
 
 ## Frameworks or technology
 
