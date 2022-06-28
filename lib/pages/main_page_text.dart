@@ -52,9 +52,11 @@ class _MainPageWidget extends State<MainPageWidget> {
               widget.rollbackAction();
             },
           ),
-          title: const Text(
-            'Fix My English',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 37),
+          title: const Center(
+            child: Text(
+              'Fix My English',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 37),
+            ),
           )),
       body: SafeArea(
         child: Stack(
