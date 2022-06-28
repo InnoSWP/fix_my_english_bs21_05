@@ -124,11 +124,13 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
           List<TextSpan> text = [];
           List<HighlighCharacter> highlightMap =
               getHighlightMap(snapshot.data!);
+          String textBuffer = "";
+          bool doLight = highlightMap[0].isHighligh;
           for (int i = 0; i < highlightMap.length; i++) {
-            if (highlightMap[i].isHighligh) {
+            if (!highlightMap[i].isHighligh && doLight) {
               text.add(
                 TextSpan(
-                  text: snapshot.data!.rawText[i],
+                  text: textBuffer,
                   style: const TextStyle(
                     backgroundColor: Color(0xffeed912),
                     //background: ,
@@ -140,13 +142,16 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => sentenceListener.value =
-                        highlightMap[i].analysisSentence!,
+                        highlightMap[i - 1].analysisSentence!,
                 ),
               );
-            } else {
+              doLight = false;
+              textBuffer = "";
+            }
+            if (highlightMap[i].isHighligh && !doLight) {
               text.add(
                 TextSpan(
-                  text: snapshot.data!.rawText[i],
+                  text: textBuffer,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -154,7 +159,40 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                   ),
                 ),
               );
+              doLight = true;
+              textBuffer = "";
             }
+            textBuffer += snapshot.data!.rawText[i];
+          }
+          if (doLight) {
+            text.add(
+              TextSpan(
+                text: textBuffer,
+                style: const TextStyle(
+                  backgroundColor: Color(0xffeed912),
+                  //background: ,
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'Merriweather',
+                  fontWeight: FontWeight.bold,
+                  //fontStyle: FontStyle.italic,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => sentenceListener.value =
+                      highlightMap[highlightMap.length - 1].analysisSentence!,
+              ),
+            );
+          } else {
+            text.add(
+              TextSpan(
+                text: textBuffer,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'Merriweather',
+                ),
+              ),
+            );
           }
           return Column(
             children: [

@@ -105,42 +105,47 @@ class _MainPageWidget extends State<MainPageWidget> {
                                           snapshot.data!.rawText;
                                       canUpdateText = false;
                                     }
-                                    return TextFormField(
-                                      controller: textEditingController,
-                                      minLines: null,
-                                      maxLines: null,
-                                      expands: true,
-                                      keyboardType: TextInputType.multiline,
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontFamily: 'Merriweather',
+                                    return Card(
+                                      elevation: 6,
+                                      child: TextFormField(
+                                        controller: textEditingController,
+                                        minLines: null,
+                                        maxLines: null,
+                                        expands: true,
+                                        keyboardType: TextInputType.multiline,
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Merriweather',
+                                        ),
+                                        decoration: InputDecoration(
+                                          labelStyle: const TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(2.0)),
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColorDark,
+                                                style: BorderStyle.solid),
+                                          ),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(2.0)),
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColorDark,
+                                                style: BorderStyle.solid),
+                                          ),
+                                          border: const OutlineInputBorder(),
+                                          label: const Text(
+                                              'Your text for analyzing'),
+                                        ),
+                                        cursorColor:
+                                            Theme.of(context).primaryColorDark,
                                       ),
-                                      decoration: InputDecoration(
-                                        labelStyle: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(2.0)),
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              style: BorderStyle.solid),
-                                        ),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(2.0)),
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              style: BorderStyle.solid),
-                                        ),
-                                        border: const OutlineInputBorder(),
-                                        label: const Text(
-                                            'Your text for analyzing'),
-                                      ),
-                                      cursorColor:
-                                          Theme.of(context).primaryColorDark,
                                     );
                                   } else {
                                     return Container(
@@ -176,7 +181,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                                         style: TextStyle(fontSize: 20),
                                       ),
                                       icon: const Icon(Icons.short_text,
-                                          size: 50),
+                                          size: 40),
                                     ),
                                   ),
                                 ),
@@ -199,7 +204,7 @@ class _MainPageWidget extends State<MainPageWidget> {
                                         style: TextStyle(fontSize: 20),
                                       ),
                                       icon: const Icon(Icons.arrow_downward,
-                                          size: 50),
+                                          size: 40),
                                     ),
                                   ),
                                 ),
