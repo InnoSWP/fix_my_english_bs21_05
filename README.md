@@ -50,7 +50,7 @@ flutter build web
 
 [![License](https://poser.pugx.org/ali-irawan/xtra/license.svg)](https://poser.pugx.org/ali-irawan/xtra/license.svg)
 [![](https://img.shields.io/github/checks-status/InnoSWP/fix_my_english_bs21_05/master)](https://img.shields.io/github/checks-status/InnoSWP/fix_my_english_bs21_05/master)
-![](https://img.shields.io/youtube/comments/dQw4w9WgXcQ?style=social)
+![](https://img.shields.io/badge/build-passing-green)
 
 ## License
 
