@@ -44,7 +44,7 @@ flutter build web
 
 - Flutter Web
 - Firebase hosting and FireStore
-- Python for MockAPI
+- Python Flask for MockAPI
 
 ## Badges
 
