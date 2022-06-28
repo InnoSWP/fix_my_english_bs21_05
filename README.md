@@ -12,6 +12,9 @@ Fix my English is a web app that can be used to analyze English academic writing
 First of all go to this [website](https://fix-my-english-43ee2.web.app/).
 
 <img src="./screenshots/cadr1.png" width="700" height="400">
+*1 - text editor, 2 - anlyze again, 3 - export to CSV, 4 - report false issue, 5 - analysis view, 6 - description of mistake*
+<img src="./screenshots/cadr2.png" width="700" height="400">
+<img src="./screenshots/cadr3.png" width="700" height="400">
 
 There are two main ways to use our project. Users can upload multiple pdf files to analyze writing in it. Users also can copy and paste the text into the text field. After that, the app should return the reports and show them to the user highlighting the mistakes. If the user wants to download the reports there is a button for that.
 
