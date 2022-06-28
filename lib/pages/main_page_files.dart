@@ -84,7 +84,6 @@ class _MainPageFilesWidget extends State<MainPageFilesWidget> {
                       child: AnalyzedTextWidget(
                         analysis: widget.analysisRequests.first,
                         controller: analyzedTextController,
-                        supportSingleExport: true,
                       ),
                     ),
                   ),

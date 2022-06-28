@@ -146,7 +146,7 @@ class _FileListWidget extends State<FileListWidget> {
                                 Row(mainAxisSize: MainAxisSize.min, children: [
                               IconButton(
                                 icon: Icon(
-                                  Icons.download,
+                                  Icons.arrow_downward,
                                   size: 30,
                                   color: (analyzedTexts[index] == selected)
                                       ? const Color.fromARGB(255, 23, 54, 35)

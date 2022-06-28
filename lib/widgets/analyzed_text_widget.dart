@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:swp/utils/moofiy_color.dart';
@@ -25,17 +24,15 @@ class AnalyzedTextController {
 class AnalyzedTextWidget extends StatefulWidget {
   final Future<AnalyzedText> analysis;
   final AnalyzedTextController controller;
-  final bool supportSingleExport;
 
   ///Constructs AnalyzedTextWidget
   ///
   ///Requires future of AnalysisData class instance [analysis]
-  const AnalyzedTextWidget(
-      {Key? key,
-      required this.analysis,
-      required this.controller,
-      required this.supportSingleExport})
-      : super(key: key);
+  const AnalyzedTextWidget({
+    Key? key,
+    required this.analysis,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   State<AnalyzedTextWidget> createState() => _AnalyzedTextWidget();
@@ -189,13 +186,65 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
                 ),
               ),
               Expanded(
-                flex: 1,
-                child: DownBar(
-                  sentenceListener: sentenceListener,
-                  supportSingleExport: widget.supportSingleExport,
-                  currentAnalysis: snapshot.data!,
-                ),
-              ),
+                  flex: 1,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    //height: MediaQuery.of(context).size.height * 0.07,
+                    //padding: const EdgeInsets.all(19),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFFFBFDF7),
+                      border: Border.all(
+                        color: const Color(0xFF864921),
+                        width: 2,
+                      ),
+                    ),
+                    child: Stack(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: ValueListenableBuilder<AnalyzedSentence>(
+                            valueListenable: sentenceListener,
+                            builder: (context, value, child) {
+                              return Text(
+                                '${value.label}\n${value.description}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  fontFamily: 'Merriweather',
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.only(right: 5, bottom: 15),
+                          child: IconButton(
+                            alignment: Alignment.topRight,
+                            tooltip: 'Report about wrong mistake',
+                            icon: const Icon(
+                              Icons.report,
+                              size: 35,
+                            ),
+                            color: const Color(0xffbb0d0d),
+                            onPressed: () {
+                              if (sentenceListener.value.sentence
+                                      .compareTo('') ==
+                                  0) {
+                                return;
+                              }
+                              addMistakeToFirestore(
+                                  sentenceListener.value.toJson());
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
             ],
           );
         } else {
@@ -213,159 +262,5 @@ class _AnalyzedTextWidget extends State<AnalyzedTextWidget> {
         }
       },
     );
-  }
-}
-
-class DownBar extends StatelessWidget {
-  final ValueListenable<AnalyzedSentence> sentenceListener;
-  final bool supportSingleExport;
-  final AnalyzedText currentAnalysis;
-
-  const DownBar(
-      {Key? key,
-      required this.sentenceListener,
-      required this.supportSingleExport,
-      required this.currentAnalysis})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (supportSingleExport) {
-      return Row(children: [
-        Expanded(
-            flex: 2,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: ElevatedButton.icon(
-                  onPressed: () {
-                    currentAnalysis.saveAsCSV();
-                  },
-                  icon: const Icon(
-                    Icons.download,
-                    size: 24,
-                  ),
-                  label: const Text(
-                    "Export CSV",
-                    style: TextStyle(fontSize: 20),
-                  )),
-            )),
-        Expanded(
-            flex: 8,
-            child: Container(
-              margin: const EdgeInsets.only(top: 5),
-              //height: MediaQuery.of(context).size.height * 0.07,
-              //padding: const EdgeInsets.all(19),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: const Color(0xFFFBFDF7),
-                border: Border.all(
-                  color: const Color(0xFF864921),
-                  width: 2,
-                ),
-              ),
-              child: Stack(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: ValueListenableBuilder<AnalyzedSentence>(
-                      valueListenable: sentenceListener,
-                      builder: (context, value, child) {
-                        return Text(
-                          '${value.label}\n${value.description}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            fontFamily: 'Merriweather',
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    margin: const EdgeInsets.only(right: 5, bottom: 15),
-                    child: IconButton(
-                      alignment: Alignment.topRight,
-                      tooltip: 'Report about wrong mistake',
-                      icon: const Icon(
-                        Icons.report,
-                        size: 35,
-                      ),
-                      color: const Color(0xffbb0d0d),
-                      onPressed: () {
-                        if (sentenceListener.value.sentence.compareTo('') ==
-                            0) {
-                          return;
-                        }
-                        addMistakeToFirestore(sentenceListener.value.toJson());
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            )),
-      ]);
-    } else {
-      return Container(
-        margin: const EdgeInsets.only(top: 5),
-        //height: MediaQuery.of(context).size.height * 0.07,
-        //padding: const EdgeInsets.all(19),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: const Color(0xFFFBFDF7),
-          border: Border.all(
-            color: const Color(0xFF864921),
-            width: 2,
-          ),
-        ),
-        child: Stack(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              child: ValueListenableBuilder<AnalyzedSentence>(
-                valueListenable: sentenceListener,
-                builder: (context, value, child) {
-                  return Text(
-                    '${value.label}\n${value.description}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontFamily: 'Merriweather',
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              margin: const EdgeInsets.only(right: 5, bottom: 15),
-              child: IconButton(
-                alignment: Alignment.topRight,
-                tooltip: 'Report about wrong mistake',
-                icon: const Icon(
-                  Icons.report,
-                  size: 35,
-                ),
-                color: const Color(0xffbb0d0d),
-                onPressed: () {
-                  if (sentenceListener.value.sentence.compareTo('') == 0) {
-                    return;
-                  }
-                  addMistakeToFirestore(sentenceListener.value.toJson());
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    }
   }
 }
